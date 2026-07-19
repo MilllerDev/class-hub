@@ -1,0 +1,32 @@
+# Environment
+.env
+.env.*
+!.env.example
+!.env.example.*
+
+# IDE
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Security
+*.pem
+
+# Logs
+*.log
+
+# Dependencies
+**/node_modules/
+
+# Build artifacts
+**/target/
+**/build/
+**/dist/
+**/.next/
+**/out/

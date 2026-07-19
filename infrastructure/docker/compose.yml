@@ -1,0 +1,40 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./../../apps/backend/Dockerfile
+    container_name: class-hub-backend
+    image: class-hub-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./../../apps/backend/.env
+    depends_on:
+      - database
+
+  database:
+    image: postgres:15.18
+    container_name: postgres-db
+    env_file:
+      -
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./../../apps/frontend/Dockerfile
+    container_name: class-hub-frontend
+    image: class-hub-frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./../../apps/frontend/.env
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
+    name: class-hub-data

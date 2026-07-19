@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: backend
+
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
+        chat:
+          model: ${GEMINI_CHAT_MODEL}
+          temperature: 0.65
+        embedding:
+          text:
+            model: ${GEMINI_EMBEDDING_MODEL}
+          api-key: ${GEMINI_API_KEY}
