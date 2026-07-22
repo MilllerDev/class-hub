@@ -8,7 +8,7 @@ public record ApiResponse<T>(
         String message,
         LocalDateTime timestamp
 ) {
-    public static <T> ApiResponse<T> success(T data, String message) {
+    public static <T> ApiResponse<T> success(String message, T data) {
         return new ApiResponse<>(data, true, message, LocalDateTime.now());
     }
 

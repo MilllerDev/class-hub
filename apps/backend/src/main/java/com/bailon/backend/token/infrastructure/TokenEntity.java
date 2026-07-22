@@ -1,0 +1,45 @@
+package com.bailon.backend.token.infrastructure;
+
+import com.bailon.backend.users.infrastructure.persistence.UserEntity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.Instant;
+import java.util.UUID;
+
+@Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "refresh_tokens")
+public class TokenEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "token_id", nullable = false, updatable = false)
+    private UUID id;
+
+    @Column(name = "token", nullable = false, updatable = false, columnDefinition = "TEXT")
+    private String token;
+
+    @Column(name = "token_revoked", nullable = false)
+    private boolean revoked;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @Column(name = "expires_at", nullable = false, updatable = false)
+    private Instant expiresAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    private UserEntity user;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = Instant.now();
+    }
+}

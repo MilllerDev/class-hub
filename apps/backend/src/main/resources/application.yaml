@@ -1,8 +1,24 @@
 spring:
   application:
     name: backend
+  threads:
+    virtual:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO}
+    show-sql: true
+    open-in-view: false
 
+  datasource:
+    driver-class-name: org.postgresql.Driver
   ai:
+    vectorstore:
+      pgvector:
+        dimensions: 1536
+        index-type: HNSW
+        distance-type: cosine_distance
+        schema-name: public
     google:
       genai:
         api-key: ${GEMINI_API_KEY}
@@ -13,3 +29,20 @@ spring:
           text:
             model: ${GEMINI_EMBEDDING_MODEL}
           api-key: ${GEMINI_API_KEY}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+jwt:
+  access-secret: ${JWT_ACCESS}
+  refresh-secret: ${JWT_REFRESH}
+  activation-secret: ${JWT_ACTIVATION}
+  access-expiration: ${JWT_EXP_ACCESS}
+  refresh-expiration: ${JWT_EXP_REFRESH}
+  activation-expiration: ${JWT_EXP_ACTIVATION}

@@ -1,0 +1,30 @@
+# IDE
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+
+# Build artifacts
+target/
+
+# Environment (SENSITIVE - passed via env_file at runtime)
+.env
+.env.*
+!.env.example
+
+# Git
+.git/
+.gitattributes
+.gitignore
+
+# Documentation
+HELP.md
+
+# Logs
+*.log
+
+# Maven wrapper (not needed - using maven Docker image)
+.mvn/
+mvnw
+mvnw.cmd

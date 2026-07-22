@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificación de correo</title>
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px;">
+
+<div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; padding: 32px; border: 1px solid #e5e5e5;">
+
+    <h2 style="color: #333333;">¡Gracias por registrarte!</h2>
+
+    <p>
+        Hola <strong th:text="${name}">Usuario</strong>,
+    </p>
+
+    <p>
+        Gracias por crear una cuenta. Para completar tu registro, verifica tu dirección de correo electrónico haciendo
+        clic en el siguiente botón.
+    </p>
+
+    <p style="text-align: center; margin: 30px 0;">
+        <a th:href="${verificationUrl}"
+           style="background-color: #2563eb;
+                  color: white;
+                  text-decoration: none;
+                  padding: 12px 24px;
+                  border-radius: 6px;
+                  display: inline-block;">
+            Verificar correo
+        </a>
+    </p>
+
+    <p>
+        Si el botón no funciona, copia y pega el siguiente enlace en tu navegador:
+    </p>
+
+    <p>
+        <a th:href="${verificationUrl}"
+           th:text="${verificationUrl}">
+            https://example.com/verify
+        </a>
+    </p>
+    <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e5e5;">
+    <p style="font-size: 12px; color: #777777;">
+        Si no creaste esta cuenta, puedes ignorar este correo.
+    </p>
+</div>
+</body>
+</html>
