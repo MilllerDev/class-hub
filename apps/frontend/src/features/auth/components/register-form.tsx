@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { GraduationCap, Users, BookOpen } from "lucide-react";
-import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { GraduationCap } from "lucide-react";
+import Link from "next/link";
+import { useActionState } from "react";
+import { register } from "../action";
+import { RegisterResponse } from "../types";
 
 function GoogleIcon() {
   return (
@@ -30,7 +32,10 @@ function GoogleIcon() {
 }
 
 export function RegisterForm() {
-  const [role, setRole] = useState<"student" | "teacher">("student");
+  const [state, formAction, isPending] = useActionState<
+    RegisterResponse | null,
+    FormData
+  >(register, null);
 
   return (
     <div className="w-full max-w-sm space-y-6">
@@ -63,18 +68,32 @@ export function RegisterForm() {
           </div>
         </div>
 
-        <form className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-medium">
-              Nombre completo
-            </label>
-            <Input
-              id="name"
-              name="name"
-              type="text"
-              placeholder="Tu nombre"
-              required
-            />
+        <form action={formAction} className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <label htmlFor="name" className="text-sm font-medium">
+                Nombre
+              </label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Tu nombre"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="lastName" className="text-sm font-medium">
+                Apellido
+              </label>
+              <Input
+                id="lastName"
+                name="lastName"
+                type="text"
+                placeholder="Tu apellido"
+                required
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -116,38 +135,8 @@ export function RegisterForm() {
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Eres</label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setRole("student")}
-                className={`flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
-                  role === "student"
-                    ? "border-primary bg-primary/5 text-primary"
-                    : "border-border text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                <Users size={16} />
-                Alumno
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole("teacher")}
-                className={`flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
-                  role === "teacher"
-                    ? "border-primary bg-primary/5 text-primary"
-                    : "border-border text-muted-foreground hover:bg-muted"
-                }`}
-              >
-                <BookOpen size={16} />
-                Docente
-              </button>
-            </div>
-          </div>
-
-          <Button type="submit" className="w-full">
-            Registrarse
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? "Creando cuenta..." : "Registrarse"}
           </Button>
         </form>
       </div>
@@ -161,6 +150,12 @@ export function RegisterForm() {
           Inicia sesión
         </Link>
       </p>
+
+      {state && !state.success && (
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
+          {state.message}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import { BookOpen, BarChart3, GraduationCap, FolderOpen } from "lucide-react";
+import { BarChart3, BookOpen, FolderOpen, GraduationCap } from "lucide-react";
+import Link from "next/link";
 
 const features = [
   {
@@ -58,26 +59,25 @@ export default function Home() {
 
       <section className="flex flex-1 flex-col items-center justify-center px-6 py-24 bg-gradient-to-b from-primary/5 via-background to-background">
         <h1 className="text-4xl md:text-5xl font-bold text-center text-foreground max-w-2xl leading-tight">
-          Tu Plataforma{" "}
-          <span className="text-primary">Académica</span>
+          Tu Plataforma <span className="text-primary">Académica</span>
         </h1>
         <p className="mt-4 text-lg text-muted-foreground text-center max-w-lg">
-          Accede a tus cursos, calificaciones y materiales de estudio.
-          Todo lo que necesitas en un solo lugar.
+          Accede a tus cursos, calificaciones y materiales de estudio. Todo lo
+          que necesitas en un solo lugar.
         </p>
         <div className="flex items-center gap-4 mt-8">
-          <a
+          <Link
             href="/login"
             className="px-6 py-3 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
           >
             Iniciar Sesión
-          </a>
-          <a
+          </Link>
+          <Link
             href="/register"
             className="px-6 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
           >
             Registrarse
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -115,8 +115,8 @@ export default function Home() {
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             ClassHub es una plataforma diseñada para ti como estudiante.
-            Centraliza tus cursos, calificaciones y materiales en una
-            interfaz simple e intuitiva.
+            Centraliza tus cursos, calificaciones y materiales en una interfaz
+            simple e intuitiva.
           </p>
         </div>
       </section>
