@@ -42,7 +42,8 @@ spring:
 jwt:
   access-secret: ${JWT_ACCESS}
   refresh-secret: ${JWT_REFRESH}
-  activation-secret: ${JWT_ACTIVATION}
   access-expiration: ${JWT_EXP_ACCESS}
   refresh-expiration: ${JWT_EXP_REFRESH}
-  activation-expiration: ${JWT_EXP_ACTIVATION}
+
+app:
+  frontend-url: ${FRONTEND_URL}

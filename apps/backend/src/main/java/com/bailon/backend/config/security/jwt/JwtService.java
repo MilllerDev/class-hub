@@ -40,16 +40,6 @@ public class JwtService implements JwtPort {
         return extractEmail(token, jwtProperties.getRefreshSecret());
     }
 
-    @Override
-    public boolean validateActivationToken(String token) {
-        return validate(token, jwtProperties.getActivationSecret());
-    }
-
-    @Override
-    public String getEmailFromActivationToken(String token) {
-        return extractEmail(token, jwtProperties.getActivationSecret());
-    }
-
     private Claims parseToken(String token, String secret) {
         SecretKey key = getKeyFromSecret(secret);
         return Jwts.parser()
@@ -97,13 +87,6 @@ public class JwtService implements JwtPort {
         Instant expiration = now.plusSeconds(jwtProperties.getAccessExpiration());
         String jwt = generateJwt(user, jwtProperties.getAccessSecret(), now, expiration);
         return new JwtData(jwt, expiration);
-    }
-
-    @Override
-    public String generateJwtActivation(User user) {
-        Instant now = Instant.now();
-        Instant expiration = now.plusSeconds(jwtProperties.getRefreshExpiration());
-        return generateJwt(user, jwtProperties.getAccessSecret(), now, expiration);
     }
 
     @Override

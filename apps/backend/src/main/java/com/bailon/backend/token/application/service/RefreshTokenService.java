@@ -1,6 +1,5 @@
 package com.bailon.backend.token.application.service;
 
-import com.bailon.backend.auth.application.service.AuthTokenIssuer;
 import com.bailon.backend.auth.domain.model.Auth;
 import com.bailon.backend.config.security.jwt.JwtPort;
 import com.bailon.backend.token.application.port.TokenRepositoryPort;
@@ -19,7 +18,7 @@ public class RefreshTokenService implements RefreshTokenUseCase {
     private final JwtPort jwtPort;
     private final UserRepository userRepository;
     private final TokenRepositoryPort tokenRepositoryPort;
-    private final AuthTokenIssuer tokenIssuer;
+    private final TokenIssuerService tokenIssuer;
 
     @Override
     public Auth execute(String token) {

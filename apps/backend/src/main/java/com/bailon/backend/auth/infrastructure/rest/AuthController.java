@@ -1,6 +1,6 @@
 package com.bailon.backend.auth.infrastructure.rest;
 
-import com.bailon.backend.auth.application.service.ActivateAccountService;
+import com.bailon.backend.auth.application.usecase.ActivationAccountUseCase;
 import com.bailon.backend.auth.application.usecase.LoginUseCase;
 import com.bailon.backend.auth.application.usecase.RegisterUseCase;
 import com.bailon.backend.auth.domain.model.Auth;
@@ -25,7 +25,7 @@ public class AuthController {
     private final LoginUseCase login;
     private final AuthMapper mapper;
     private final RefreshTokenUseCase refresh;
-    private final ActivateAccountService activateAccountService;
+    private final ActivationAccountUseCase activateAccount;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody RegisterRequest req) {
@@ -50,8 +50,9 @@ public class AuthController {
     }
 
     @GetMapping("/activate")
-    public ResponseEntity<ApiResponse<Void>> activate(@RequestParam String token) {
-        activateAccountService.execute(token);
-        return ResponseEntity.ok(ApiResponse.success("null", null));
+    public ResponseEntity<ApiResponse<Auth>> activate(@RequestParam String token) {
+        return ResponseEntity.ok(
+                ApiResponse.success("Se activo la cuenta exitosamente", activateAccount.execute(token))
+        );
     }
 }

@@ -11,13 +11,7 @@ public interface JwtPort {
 
     String getEmailFromRefreshToken(String token);
 
-    String generateJwtActivation(User user);
-
     boolean validateAccessToken(String token, String email);
 
     boolean validateRefreshToken(String token, String email);
-
-    boolean validateActivationToken(String token);
-
-    String getEmailFromActivationToken(String token);
 }

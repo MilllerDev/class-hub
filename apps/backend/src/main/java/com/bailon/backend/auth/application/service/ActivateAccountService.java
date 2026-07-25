@@ -1,33 +1,41 @@
 package com.bailon.backend.auth.application.service;
 
-import com.bailon.backend.auth.domain.model.Auth;
-import com.bailon.backend.config.security.jwt.JwtPort;
+import com.bailon.backend.auth.application.usecase.ActivationAccountUseCase;
 import com.bailon.backend.auth.domain.exception.InvalidActivationTokenException;
+import com.bailon.backend.auth.domain.model.Auth;
+import com.bailon.backend.token.application.port.ActivationTokenPort;
+import com.bailon.backend.token.application.service.TokenIssuerService;
+import com.bailon.backend.token.domain.model.ActivationToken;
 import com.bailon.backend.users.application.port.UserRepository;
-import com.bailon.backend.users.domain.exception.UserNotFoundException;
 import com.bailon.backend.users.domain.model.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+
 @Service
-public class ActivateAccountService {
-    private final JwtPort jwtPort;
+@RequiredArgsConstructor
+public class ActivateAccountService implements ActivationAccountUseCase {
+    private final TokenIssuerService tokenIssuer;
+    private final ActivationTokenPort activationTokenPort;
     private final UserRepository userRepository;
 
-    public ActivateAccountService(JwtPort jwtPort, UserRepository userRepository) {
-        this.jwtPort = jwtPort;
-        this.userRepository = userRepository;
-    }
-
-    public void execute(String token) {
-        if (!jwtPort.validateActivationToken(token)) {
-            throw new InvalidActivationTokenException("Invalid or expired activation token");
+    @Override
+    public Auth execute(String token) {
+        ActivationToken activation = activationTokenPort.findByToken(token).orElseThrow(
+                () -> new InvalidActivationTokenException("Token de activación inválido")
+        );
+        if (activation.getExpiresAt().isBefore(Instant.now())) {
+            throw new InvalidActivationTokenException("Token de activación expirado");
         }
-        String email = jwtPort.getEmailFromActivationToken(token);
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new UserNotFoundException("User not found")
+        activation.setUsed(true);
+        activation.setUsedAt(Instant.now());
+        User user = userRepository.findByIdInactive(activation.getUserId()).orElseThrow(
+                () -> new InvalidActivationTokenException("Usuario no encontrado o inactivo")
         );
         user.setEnabled(true);
         userRepository.save(user);
-
+        activationTokenPort.save(activation);
+        return tokenIssuer.issueToken(user);
     }
 }
