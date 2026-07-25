@@ -1,4 +1,4 @@
-package com.bailon.backend.token.infrastructure;
+package com.bailon.backend.token.infrastructure.entity;
 
 import com.bailon.backend.users.infrastructure.persistence.UserEntity;
 import jakarta.persistence.*;
@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -36,6 +38,7 @@ public class TokenEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity user;
 
     @PrePersist

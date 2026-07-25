@@ -2,6 +2,7 @@ package com.bailon.backend.auth.application.service;
 
 import com.bailon.backend.auth.application.usecase.LoginUseCase;
 import com.bailon.backend.auth.domain.model.Auth;
+import com.bailon.backend.token.application.service.TokenIssuerService;
 import com.bailon.backend.users.domain.model.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class LoginService implements LoginUseCase {
     private final AuthenticationManager authenticationManager;
-    private final AuthTokenIssuer tokenIssuer;
+    private final TokenIssuerService tokenIssuer;
 
-    public LoginService(AuthenticationManager authenticationManager, AuthTokenIssuer tokenIssuer) {
+    public LoginService(AuthenticationManager authenticationManager, TokenIssuerService tokenIssuer) {
         this.authenticationManager = authenticationManager;
         this.tokenIssuer = tokenIssuer;
     }
