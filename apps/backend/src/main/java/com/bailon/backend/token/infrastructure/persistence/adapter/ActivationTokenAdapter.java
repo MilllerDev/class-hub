@@ -1,12 +1,13 @@
-package com.bailon.backend.token.infrastructure.adapter;
+package com.bailon.backend.token.infrastructure.persistence.adapter;
 
 import com.bailon.backend.token.application.port.ActivationTokenPort;
 import com.bailon.backend.token.domain.model.ActivationToken;
-import com.bailon.backend.token.infrastructure.ActivationTokenRepositoryJpa;
 import com.bailon.backend.token.infrastructure.mapper.TokenMapper;
+import com.bailon.backend.token.infrastructure.persistence.repository.ActivationTokenRepositoryJpa;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class ActivationTokenAdapter implements ActivationTokenPort {
@@ -31,5 +32,10 @@ public class ActivationTokenAdapter implements ActivationTokenPort {
     @Override
     public Optional<ActivationToken> findByToken(String token) {
         return repositoryJpa.findByTokenAndUsedFalse(token).map(mapper::toDomain);
+    }
+
+    @Override
+    public void revokeAllByUserId(UUID userId) {
+        repositoryJpa.revokeAllByUserId(userId);
     }
 }

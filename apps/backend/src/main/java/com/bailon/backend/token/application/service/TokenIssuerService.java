@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Component
-@Transactional
 public class TokenIssuerService {
     private final JwtPort jwtPort;
     private final TokenRepositoryPort tokenPort;
@@ -26,6 +26,7 @@ public class TokenIssuerService {
         this.activationTokenPort = activationTokenPort;
     }
 
+    @Transactional
     public Auth issueToken(User user) {
         tokenPort.revokeToken(user.getId());
         JwtData access = jwtPort.generateJwtAccess(user);
@@ -34,8 +35,10 @@ public class TokenIssuerService {
         return new Auth(access.token(), refresh.token(), user.getRole());
     }
 
-    public String issueTokenActivation(User user) {
-        ActivationToken activation = ActivationToken.create(user);
+    @Transactional
+    public String issueTokenActivation(UUID userId) {
+        activationTokenPort.revokeAllByUserId(userId);
+        ActivationToken activation = ActivationToken.create(userId);
         activation.setExpiresAt(Instant.now().plusSeconds(900));
         activationTokenPort.save(activation);
         return activation.getToken();

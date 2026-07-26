@@ -1,9 +1,9 @@
-package com.bailon.backend.token.infrastructure.adapter;
+package com.bailon.backend.token.infrastructure.persistence.adapter;
 
 import com.bailon.backend.token.application.port.TokenRepositoryPort;
 import com.bailon.backend.token.domain.model.Token;
-import com.bailon.backend.token.infrastructure.TokenRepositoryJpa;
 import com.bailon.backend.token.infrastructure.mapper.TokenMapper;
+import com.bailon.backend.token.infrastructure.persistence.repository.TokenRepositoryJpa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

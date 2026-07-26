@@ -1,4 +1,4 @@
-package com.bailon.backend.users.infrastructure.persistence;
+package com.bailon.backend.users.infrastructure.rest.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

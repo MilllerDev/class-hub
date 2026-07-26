@@ -1,4 +1,4 @@
-package com.bailon.backend.token.infrastructure.entity;
+package com.bailon.backend.token.infrastructure.persistence.entity;
 
 import com.bailon.backend.users.infrastructure.persistence.UserEntity;
 import jakarta.persistence.*;

@@ -3,15 +3,17 @@ package com.bailon.backend.auth.infrastructure.rest;
 import com.bailon.backend.auth.application.usecase.ActivationAccountUseCase;
 import com.bailon.backend.auth.application.usecase.LoginUseCase;
 import com.bailon.backend.auth.application.usecase.RegisterUseCase;
+import com.bailon.backend.auth.application.usecase.ResendActivationUseCase;
 import com.bailon.backend.auth.domain.model.Auth;
 import com.bailon.backend.auth.infrastructure.mapper.AuthMapper;
 import com.bailon.backend.auth.infrastructure.rest.request.LoginRequest;
 import com.bailon.backend.auth.infrastructure.rest.request.RefreshTokenRequest;
 import com.bailon.backend.auth.infrastructure.rest.request.RegisterRequest;
+import com.bailon.backend.auth.infrastructure.rest.request.ResendActivationRequest;
 import com.bailon.backend.config.ApiResponse;
 import com.bailon.backend.token.application.usecase.RefreshTokenUseCase;
 import com.bailon.backend.users.domain.model.User;
-import com.bailon.backend.users.infrastructure.persistence.UserResponse;
+import com.bailon.backend.users.infrastructure.rest.response.UserResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ public class AuthController {
     private final AuthMapper mapper;
     private final RefreshTokenUseCase refresh;
     private final ActivationAccountUseCase activateAccount;
+    private final ResendActivationUseCase resendActivation;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody RegisterRequest req) {
@@ -53,6 +56,14 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Auth>> activate(@RequestParam String token) {
         return ResponseEntity.ok(
                 ApiResponse.success("Se activo la cuenta exitosamente", activateAccount.execute(token))
+        );
+    }
+
+    @PostMapping("/resend-activation")
+    public ResponseEntity<ApiResponse<Void>> resendActivation(@Valid @RequestBody ResendActivationRequest req) {
+        resendActivation.execute(req.email());
+        return ResponseEntity.ok(
+                ApiResponse.success("Se envió con éxito el link de activación", null)
         );
     }
 }

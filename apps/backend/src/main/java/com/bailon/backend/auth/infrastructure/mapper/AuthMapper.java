@@ -3,7 +3,7 @@ package com.bailon.backend.auth.infrastructure.mapper;
 import com.bailon.backend.auth.infrastructure.rest.request.RegisterRequest;
 import com.bailon.backend.profile.domain.model.Profile;
 import com.bailon.backend.users.domain.model.User;
-import com.bailon.backend.users.infrastructure.persistence.UserResponse;
+import com.bailon.backend.users.infrastructure.rest.response.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

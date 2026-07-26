@@ -2,8 +2,8 @@ package com.bailon.backend.token.infrastructure.mapper;
 
 import com.bailon.backend.token.domain.model.ActivationToken;
 import com.bailon.backend.token.domain.model.Token;
-import com.bailon.backend.token.infrastructure.entity.ActivationTokenEntity;
-import com.bailon.backend.token.infrastructure.entity.TokenEntity;
+import com.bailon.backend.token.infrastructure.persistence.entity.ActivationTokenEntity;
+import com.bailon.backend.token.infrastructure.persistence.entity.TokenEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

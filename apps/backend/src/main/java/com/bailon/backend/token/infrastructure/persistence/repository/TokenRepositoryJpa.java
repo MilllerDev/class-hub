@@ -1,6 +1,6 @@
-package com.bailon.backend.token.infrastructure;
+package com.bailon.backend.token.infrastructure.persistence.repository;
 
-import com.bailon.backend.token.infrastructure.entity.TokenEntity;
+import com.bailon.backend.token.infrastructure.persistence.entity.TokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

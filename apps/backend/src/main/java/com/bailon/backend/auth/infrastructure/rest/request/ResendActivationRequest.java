@@ -1,0 +1,11 @@
+package com.bailon.backend.auth.infrastructure.rest.request;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record ResendActivationRequest(
+        @NotBlank(message = "El email es obligatorio")
+        @Email(message = "El email no tiene un formato válido")
+        String email
+) {
+}

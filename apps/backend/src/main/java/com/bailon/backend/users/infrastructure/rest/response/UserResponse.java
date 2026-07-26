@@ -1,4 +1,4 @@
-package com.bailon.backend.users.infrastructure.persistence;
+package com.bailon.backend.users.infrastructure.rest.response;
 
 import com.bailon.backend.users.domain.model.UserRole;
 

@@ -1,6 +1,8 @@
-package com.bailon.backend.profile.infrastructure.persistence;
+package com.bailon.backend.profile.infrastructure.mapper;
 
 import com.bailon.backend.profile.domain.model.Profile;
+import com.bailon.backend.profile.infrastructure.persistence.ProfileEntity;
+import com.bailon.backend.profile.infrastructure.rest.request.ProfileRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

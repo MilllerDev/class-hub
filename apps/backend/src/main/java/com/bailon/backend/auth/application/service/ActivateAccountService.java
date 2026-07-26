@@ -10,6 +10,7 @@ import com.bailon.backend.users.application.port.UserRepository;
 import com.bailon.backend.users.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -21,6 +22,7 @@ public class ActivateAccountService implements ActivationAccountUseCase {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public Auth execute(String token) {
         ActivationToken activation = activationTokenPort.findByToken(token).orElseThrow(
                 () -> new InvalidActivationTokenException("Token de activación inválido")
