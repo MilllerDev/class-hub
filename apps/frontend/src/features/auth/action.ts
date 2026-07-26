@@ -2,7 +2,7 @@
 
 import { api } from "@/lib/api";
 import { setServerTokens } from "@/lib/cookies";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import {
   Auth,
   AuthResponse,
@@ -54,9 +54,20 @@ async function register(
   return res;
 }
 
-async function resendActivation(email: string) {
-  console.log("Reenviar activación a:", email);
+async function activateAccount(token: string) {
+  const res = await api.get<Auth>(`/activate?token=${token}`);
+  if (res.success && res.data) {
+    const { accessToken, refreshToken, role } = res.data;
+    await setServerTokens({ accessToken, refreshToken });
+    redirect(`/${role.toLocaleLowerCase()}`);
+  }
+  notFound();
 }
 
-export { login, register, resendActivation };
+async function resendActivation(email: string) {
+  const res = await api.post("/resend-activation", email);
+  return { message: res.message, success: res.success };
+}
+
+export { activateAccount, login, register, resendActivation };
 
