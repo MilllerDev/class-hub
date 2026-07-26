@@ -13,6 +13,7 @@ public interface TokenMapper {
     Token toDomain(TokenEntity entity);
 
     @Mapping(target = "user.id", source = "userId")
+    @Mapping(target = "tokenHash", ignore = true)
     TokenEntity toEntity(Token token);
 
     @Mapping(target = "user.id", source = "userId")

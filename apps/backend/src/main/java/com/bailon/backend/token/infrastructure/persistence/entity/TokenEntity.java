@@ -27,6 +27,9 @@ public class TokenEntity {
     @Column(name = "token", nullable = false, updatable = false, columnDefinition = "TEXT")
     private String token;
 
+    @Column(name = "token_hash", nullable = false, updatable = false, unique = true, length = 64)
+    private String tokenHash;
+
     @Column(name = "token_revoked", nullable = false)
     private boolean revoked;
 

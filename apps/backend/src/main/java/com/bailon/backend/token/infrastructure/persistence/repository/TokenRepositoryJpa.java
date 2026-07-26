@@ -9,9 +9,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface TokenRepositoryJpa extends JpaRepository<TokenEntity, UUID> {
-    Optional<TokenEntity> findByToken(String token);
+    Optional<TokenEntity> findByTokenHash(String tokenHash);
 
-    boolean existsByTokenAndRevokedFalse(String token);
+    boolean existsByTokenHashAndRevokedFalse(String tokenHash);
 
     @Modifying
     @Query("UPDATE TokenEntity t SET t.revoked = true WHERE t.user.id = :userId AND t.revoked = false")
