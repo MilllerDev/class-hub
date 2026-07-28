@@ -1,6 +1,5 @@
 package com.bailon.backend.token.domain.model;
 
-import com.bailon.backend.users.domain.model.User;
 import lombok.*;
 
 import java.security.SecureRandom;
@@ -27,11 +26,11 @@ public class ActivationToken {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 
-    public static ActivationToken create(User user) {
+    public static ActivationToken create(UUID userId) {
         return ActivationToken.builder()
                 .token(generateToken())
                 .used(false)
-                .userId(user.getId())
+                .userId(userId)
                 .build();
     }
 }

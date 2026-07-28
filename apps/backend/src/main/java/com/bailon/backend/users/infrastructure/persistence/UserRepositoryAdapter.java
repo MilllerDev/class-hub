@@ -2,6 +2,7 @@ package com.bailon.backend.users.infrastructure.persistence;
 
 import com.bailon.backend.users.application.port.UserRepository;
 import com.bailon.backend.users.domain.model.User;
+import com.bailon.backend.users.infrastructure.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class UserRepositoryAdapter implements UserRepository {
-    private final JpaUserRepository repositoryJpa;
+    private final UserRepositoryJpa repositoryJpa;
     private final UserMapper userMapper;
 
     @Override
@@ -22,6 +23,11 @@ public class UserRepositoryAdapter implements UserRepository {
     @Override
     public Optional<User> findByEmail(String email) {
         return repositoryJpa.findByEmail(email).map(userMapper::toDomain);
+    }
+
+    @Override
+    public Optional<User> findByEmailInactive(String email) {
+        return repositoryJpa.findByEmailAndEnabledFalse(email).map(userMapper::toDomain);
     }
 
     @Override

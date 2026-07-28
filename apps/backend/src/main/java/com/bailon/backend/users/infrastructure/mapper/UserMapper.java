@@ -1,6 +1,7 @@
-package com.bailon.backend.users.infrastructure.persistence;
+package com.bailon.backend.users.infrastructure.mapper;
 
 import com.bailon.backend.users.domain.model.User;
+import com.bailon.backend.users.infrastructure.persistence.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

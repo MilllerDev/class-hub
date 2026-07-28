@@ -1,9 +1,11 @@
-package com.bailon.backend.token.infrastructure.adapter;
+package com.bailon.backend.token.infrastructure.persistence.adapter;
 
 import com.bailon.backend.token.application.port.TokenRepositoryPort;
 import com.bailon.backend.token.domain.model.Token;
-import com.bailon.backend.token.infrastructure.TokenRepositoryJpa;
+import com.bailon.backend.token.infrastructure.hash.TokenHashUtil;
 import com.bailon.backend.token.infrastructure.mapper.TokenMapper;
+import com.bailon.backend.token.infrastructure.persistence.entity.TokenEntity;
+import com.bailon.backend.token.infrastructure.persistence.repository.TokenRepositoryJpa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -23,16 +25,20 @@ public class TokenRepositoryAdapter implements TokenRepositoryPort {
 
     @Override
     public void save(Token token) {
-        repositoryJpa.save(mapper.toEntity(token));
+        TokenEntity entity = mapper.toEntity(token);
+        entity.setTokenHash(TokenHashUtil.hash(token.getToken()));
+        repositoryJpa.save(entity);
     }
 
     @Override
     public Optional<Token> findByToken(String token) {
-        return repositoryJpa.findByToken(token).map(mapper::toDomain);
+        String hash = TokenHashUtil.hash(token);
+        return repositoryJpa.findByTokenHash(hash).map(mapper::toDomain);
     }
 
     @Override
     public boolean existsValid(String token) {
-        return repositoryJpa.existsByTokenAndRevokedFalse(token);
+        String hash = TokenHashUtil.hash(token);
+        return repositoryJpa.existsByTokenHashAndRevokedFalse(hash);
     }
 }

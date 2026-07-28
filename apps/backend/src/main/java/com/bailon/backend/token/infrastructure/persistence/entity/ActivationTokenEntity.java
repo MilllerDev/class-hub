@@ -1,4 +1,4 @@
-package com.bailon.backend.token.infrastructure.entity;
+package com.bailon.backend.token.infrastructure.persistence.entity;
 
 import com.bailon.backend.users.infrastructure.persistence.UserEntity;
 import jakarta.persistence.*;
@@ -12,29 +12,32 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.Instant;
 import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "refresh_tokens")
-public class TokenEntity {
+@Table(name = "activation_tokens")
+public class ActivationTokenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "token_id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "token", nullable = false, updatable = false, columnDefinition = "TEXT")
+    @Column(name = "token", nullable = false, updatable = false, unique = true, length = 64)
     private String token;
 
-    @Column(name = "token_revoked", nullable = false)
-    private boolean revoked;
+    @Column(name = "used", nullable = false)
+    private boolean used;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    @Column(name = "expires_at", nullable = false, updatable = false)
+    @Column(name = "expires_at", nullable = false)
     private Instant expiresAt;
+
+    @Column(name = "used_at")
+    private Instant usedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
@@ -42,7 +45,7 @@ public class TokenEntity {
     private UserEntity user;
 
     @PrePersist
-    public void prePersist() {
+    public void onPrePersist() {
         createdAt = Instant.now();
     }
 }

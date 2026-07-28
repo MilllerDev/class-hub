@@ -1,4 +1,4 @@
-package com.bailon.backend.profile.infrastructure.persistence;
+package com.bailon.backend.profile.infrastructure.rest.request;
 
 import jakarta.validation.constraints.NotBlank;
 

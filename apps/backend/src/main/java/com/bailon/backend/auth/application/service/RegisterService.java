@@ -1,7 +1,7 @@
 package com.bailon.backend.auth.application.service;
 
 import com.bailon.backend.auth.application.usecase.RegisterUseCase;
-import com.bailon.backend.auth.domain.event.UserRegisteredEvent;
+import com.bailon.backend.auth.domain.event.ActivationEmailRequestedEvent;
 import com.bailon.backend.profile.application.port.ProfileRepository;
 import com.bailon.backend.profile.domain.model.Profile;
 import com.bailon.backend.token.application.service.TokenIssuerService;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class RegisterService implements RegisterUseCase {
     private final ProfileRepository profileRepository;
@@ -26,6 +25,7 @@ public class RegisterService implements RegisterUseCase {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public User execute(Profile profile) {
         if (userRepository.existsByEmail(profile.getUser().getEmail())) {
             throw new UserAlreadyExistsException("El email ya está registrado");
@@ -35,7 +35,7 @@ public class RegisterService implements RegisterUseCase {
         profile.getUser().setEnabled(false);
         Profile savedProfile = profileRepository.save(profile);
         User user = savedProfile.getUser();
-        eventPublisher.publishEvent(new UserRegisteredEvent(profile.getName(), user.getEmail(), tokenIssuer.issueTokenActivation(user)));
+        eventPublisher.publishEvent(new ActivationEmailRequestedEvent(user.getEmail(), tokenIssuer.issueTokenActivation(user.getId())));
         return user;
     }
 }
