@@ -2,11 +2,13 @@
 
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
+import { toast } from "@/shared/components/ui/toast";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { GraduationCap } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { register } from "../action";
-import { RegisterResponse } from "../types";
+import { RegisterFileds, registerSchema } from "../schemas";
 
 function GoogleIcon() {
   return (
@@ -32,10 +34,19 @@ function GoogleIcon() {
 }
 
 export function RegisterForm() {
-  const [state, formAction, isPending] = useActionState<
-    RegisterResponse | null,
-    FormData
-  >(register, null);
+  const {
+    register: registerField,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterFileds>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const onSubmit: SubmitHandler<RegisterFileds> = async (data) => {
+    const { confirmPassword: _, ...request } = data;
+    const res = await register(request);
+    toast.add({ description: res.message });
+  };
 
   return (
     <div className="w-full max-w-sm space-y-6">
@@ -68,7 +79,7 @@ export function RegisterForm() {
           </div>
         </div>
 
-        <form action={formAction} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium">
@@ -76,11 +87,15 @@ export function RegisterForm() {
               </label>
               <Input
                 id="name"
-                name="name"
-                type="text"
                 placeholder="Tu nombre"
-                required
+                autoComplete="name"
+                {...registerField("name")}
               />
+              {errors.name && (
+                <p className="text-xs text-destructive">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <label htmlFor="lastName" className="text-sm font-medium">
@@ -88,11 +103,15 @@ export function RegisterForm() {
               </label>
               <Input
                 id="lastName"
-                name="lastName"
-                type="text"
                 placeholder="Tu apellido"
-                required
+                autoComplete="off"
+                {...registerField("lastName")}
               />
+              {errors.lastName && (
+                <p className="text-xs text-destructive">
+                  {errors.lastName.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -102,11 +121,16 @@ export function RegisterForm() {
             </label>
             <Input
               id="email"
-              name="email"
               type="email"
+              autoComplete="email"
               placeholder="tu@email.com"
-              required
+              {...registerField("user.email")}
             />
+            {errors.user?.email && (
+              <p className="text-xs text-destructive">
+                {errors.user.email.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -115,11 +139,15 @@ export function RegisterForm() {
             </label>
             <Input
               id="password"
-              name="password"
               type="password"
               placeholder="••••••••"
-              required
+              {...registerField("user.password")}
             />
+            {errors.user?.password && (
+              <p className="text-xs text-destructive">
+                {errors.user.password.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -128,15 +156,19 @@ export function RegisterForm() {
             </label>
             <Input
               id="confirmPassword"
-              name="confirmPassword"
               type="password"
               placeholder="••••••••"
-              required
+              {...registerField("confirmPassword")}
             />
+            {errors.confirmPassword && (
+              <p className="text-xs text-destructive">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
 
-          <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? "Creando cuenta..." : "Registrarse"}
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? "Creando cuenta..." : "Registrarse"}
           </Button>
         </form>
       </div>
@@ -150,12 +182,6 @@ export function RegisterForm() {
           Inicia sesión
         </Link>
       </p>
-
-      {state && !state.success && (
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
-          {state.message}
-        </div>
-      )}
     </div>
   );
 }
