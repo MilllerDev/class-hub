@@ -1,5 +1,3 @@
-import { ApiResponse } from "@/shared/types/api-response";
-
 export type LoginRequest = {
   email: string;
   password: string;
@@ -20,13 +18,9 @@ export type Auth = {
   role: string;
 };
 
-export type AuthResponse = ApiResponse<Auth>;
-
-export type RegisterUser = {
+export type User = {
   id: string;
   email: string;
   role: string;
   enabled: boolean;
 };
-
-export type RegisterResponse = ApiResponse<RegisterUser>;

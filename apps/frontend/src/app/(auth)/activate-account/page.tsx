@@ -1,6 +1,5 @@
-import { activateAccount } from "@/features/auth/action";
 import { ResendForm } from "@/features/auth/components/resend-form";
-import { setServerTokens } from "@/lib/cookies";
+import { TokenActivator } from "@/features/auth/components/token-activator";
 import { Mail } from "lucide-react";
 import { redirect } from "next/navigation";
 
@@ -19,13 +18,7 @@ export default async function ActivateAccountPage({
   }
 
   if (token) {
-    const { data, success } = await activateAccount(token);
-    if (!success) {
-      redirect("/login");
-    }
-    const { accessToken, refreshToken, role } = data;
-    await setServerTokens({ accessToken, refreshToken });
-    redirect(`/${role.toLocaleLowerCase()}`);
+    return <TokenActivator token={token} />;
   }
 
   return (
