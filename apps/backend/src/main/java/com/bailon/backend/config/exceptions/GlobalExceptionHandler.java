@@ -2,6 +2,9 @@ package com.bailon.backend.config.exceptions;
 
 import com.bailon.backend.auth.domain.exception.InvalidActivationTokenException;
 import com.bailon.backend.config.ApiResponse;
+import com.bailon.backend.courses.domain.exception.CourseAlreadyExistsException;
+import com.bailon.backend.courses.domain.exception.CourseNotFoundException;
+import com.bailon.backend.courses.domain.exception.InvalidTeacherException;
 import com.bailon.backend.token.domain.exception.InvalidRefreshTokenException;
 import com.bailon.backend.token.domain.exception.RefreshTokenNotFoundException;
 import com.bailon.backend.users.domain.exception.UserAlreadyExistsException;
@@ -9,8 +12,8 @@ import com.bailon.backend.users.domain.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,6 +35,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ApiResponse<Void>> handleUserAlreadyExists(UserAlreadyExistsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(CourseNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCourseNotFound(CourseNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(CourseAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCourseAlreadyExists(CourseAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidTeacherException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidTeacher(InvalidTeacherException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(ex.getMessage()));
     }
 
     @ExceptionHandler(InvalidActivationTokenException.class)
@@ -67,14 +85,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<ApiResponse<Void>> handleDisabled(DisabledException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                ApiResponse.error("Cuenta no activada. Revisa tu correo electrónico")
+                ApiResponse.error("Cuenta no activada. Revisa tu correo electrónico: " + ex.getMessage())
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                ApiResponse.error("No tienes acceso para acción: " + ex.getMessage())
         );
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResponse<Void>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ApiResponse.error("Cuerpo de solicitud malformado o tipo de dato incorrecto")
+                ApiResponse.error("Cuerpo de solicitud malformado o tipo de dato incorrecto: " + ex.getMessage())
         );
     }
 

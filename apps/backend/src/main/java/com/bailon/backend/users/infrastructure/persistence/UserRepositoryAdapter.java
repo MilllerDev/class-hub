@@ -2,6 +2,7 @@ package com.bailon.backend.users.infrastructure.persistence;
 
 import com.bailon.backend.users.application.port.UserRepository;
 import com.bailon.backend.users.domain.model.User;
+import com.bailon.backend.users.domain.model.UserRole;
 import com.bailon.backend.users.infrastructure.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -33,6 +34,11 @@ public class UserRepositoryAdapter implements UserRepository {
     @Override
     public boolean existsByEmail(String email) {
         return repositoryJpa.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsUser(UUID id, UserRole role) {
+        return repositoryJpa.existsByIdAndRole(id, role);
     }
 
     @Override
