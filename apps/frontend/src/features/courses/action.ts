@@ -1,0 +1,41 @@
+"use server";
+
+import { api } from "@/lib/api";
+import { revalidatePath } from "next/cache";
+import { Course, CourseRequest } from "./types";
+
+async function getCourses() {
+  const res = await api.get<Course[]>("/courses");
+  return res;
+}
+
+async function getCourse(idOrSlug: string) {
+  const res = await api.get<Course>(`/courses/${idOrSlug}`);
+  return res;
+}
+
+async function createCourse(request: CourseRequest) {
+  const res = await api.post<Course>("/courses", request);
+  if (res.success) {
+    revalidatePath("/courses");
+  }
+  return res;
+}
+
+async function updateCourse(id: string, request: CourseRequest) {
+  const res = await api.put<Course>(`/courses/${id}`, request);
+  if (res.success) {
+    revalidatePath("/courses");
+  }
+  return res;
+}
+
+async function deleteCourse(id: string) {
+  const res = await api.delete<Course>(`/courses/${id}`);
+  if (res.success) {
+    revalidatePath("/courses");
+  }
+  return res;
+}
+
+export { createCourse, deleteCourse, getCourse, getCourses, updateCourse };
