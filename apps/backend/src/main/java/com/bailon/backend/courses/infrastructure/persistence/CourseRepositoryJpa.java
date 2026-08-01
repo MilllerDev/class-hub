@@ -1,6 +1,8 @@
 package com.bailon.backend.courses.infrastructure.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,5 +21,9 @@ public interface CourseRepositoryJpa extends JpaRepository<CourseEntity, UUID> {
 
     boolean existsBySlug(String slug);
 
-    boolean existsByNameOrSlugAndIdNot(String name, String slug, UUID id);
+    @Query("""
+            SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM CourseEntity c
+            WHERE (c.name = :name OR c.slug = :slug) AND c.id <> :id
+            """)
+    boolean existsByNameOrSlugAndIdNot(@Param("name") String name, @Param("slug") String slug, @Param("id") UUID id);
 }

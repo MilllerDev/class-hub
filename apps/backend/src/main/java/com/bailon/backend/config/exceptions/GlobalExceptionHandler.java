@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Void>> handleAccessDenied(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                ApiResponse.error("No tienes acceso para acción: " + ex.getMessage())
+                ApiResponse.error("No tienes acceso para esta acción: " + ex.getMessage())
         );
     }
 

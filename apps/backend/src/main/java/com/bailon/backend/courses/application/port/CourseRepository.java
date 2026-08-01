@@ -20,6 +20,7 @@ public interface CourseRepository {
     List<Course> findAllOwnedBy(UUID userId);
 
     boolean alreadyExists(String name, String slug);
+
     boolean alreadyExists(String name, String slug, UUID id);
 
     boolean existsBySlug(String slug);

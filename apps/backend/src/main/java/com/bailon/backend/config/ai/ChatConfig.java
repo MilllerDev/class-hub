@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Configuration;
 public class ChatConfig {
     @Bean
     public ChatClient chatClient(ChatModel chatModel) {
-        return ChatClient.builder(chatModel).defaultSystem("").build();
+        return ChatClient.builder(chatModel).build();
     }
 }
