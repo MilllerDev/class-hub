@@ -11,4 +11,5 @@ export type CourseRequest = {
   name: string;
   description?: string | null;
   userId?: string | null;
+  useAi: boolean;
 };

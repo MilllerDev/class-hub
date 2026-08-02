@@ -1,6 +1,6 @@
 "use client";
 
-import { createCourse, updateCourse } from "@/features/courses/action";
+import { upsertCourse } from "@/features/courses/action";
 import { courseSchema } from "@/features/courses/schemas";
 import type { Course, CourseRequest } from "@/features/courses/types";
 import { Button } from "@/shared/components/ui/button";
@@ -20,17 +20,17 @@ import { toast } from "@/shared/components/ui/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, Plus, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
 
 export function CourseFormDialog({ course }: { course?: Course }) {
   const isEditing = course !== undefined;
-  const [useAI, setUseAI] = useState(false);
   const [open, setOpen] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(courseSchema),
@@ -38,22 +38,19 @@ export function CourseFormDialog({ course }: { course?: Course }) {
       name: course?.name,
       description: course?.description,
       userId: course?.userId,
+      useAi: false,
     },
   });
+  const useAi = useWatch({ control, name: "useAi" });
 
   const onSubmit: SubmitHandler<CourseRequest> = async (data) => {
-    const { description, ...rest } = data;
-    const payload: CourseRequest = useAI ? rest : { ...rest, description };
-
-    const { message, success } = course
-      ? await updateCourse(course.id, payload)
-      : await createCourse(payload);
-    toast.add({ type: success ? "success" : "error", description: message });
-
+    const { success, message } = await upsertCourse(data, course?.id);
     if (success) {
       setOpen(false);
       reset();
     }
+    console.log(data);
+    toast.add({ type: success ? "success" : "error", description: message });
   };
 
   return (
@@ -112,11 +109,18 @@ export function CourseFormDialog({ course }: { course?: Course }) {
                   Generar descripción con IA
                 </label>
               </div>
-              <Switch
-                id="ai-switch"
-                checked={useAI}
-                onCheckedChange={setUseAI}
-                size="sm"
+              <Controller
+                name="useAi"
+                control={control}
+                render={({ field }) => (
+                  <Switch
+                    id="ai-switch"
+                    {...register("useAi")}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    size="sm"
+                  />
+                )}
               />
             </div>
 
@@ -126,7 +130,7 @@ export function CourseFormDialog({ course }: { course?: Course }) {
               </label>
               <Input
                 id="description"
-                disabled={useAI}
+                disabled={useAi}
                 {...register("description")}
                 placeholder={"Descripción (opcional)"}
               />

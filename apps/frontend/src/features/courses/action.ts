@@ -30,6 +30,10 @@ async function updateCourse(id: string, request: CourseRequest) {
   return res;
 }
 
+async function upsertCourse(request: CourseRequest, id?: string) {
+  return id ? await updateCourse(id, request) : await createCourse(request);
+}
+
 async function deleteCourse(id: string) {
   const res = await api.delete<Course>(`/courses/${id}`);
   if (res.success) {
@@ -38,4 +42,11 @@ async function deleteCourse(id: string) {
   return res;
 }
 
-export { createCourse, deleteCourse, getCourse, getCourses, updateCourse };
+export {
+  createCourse,
+  deleteCourse,
+  getCourse,
+  getCourses,
+  updateCourse,
+  upsertCourse,
+};

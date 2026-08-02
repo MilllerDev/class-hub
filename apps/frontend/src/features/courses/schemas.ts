@@ -15,6 +15,7 @@ export const courseSchema = z.object({
     .optional()
     .nullable(),
   userId: z.uuid().optional().nullable(),
+  useAi: z.boolean().default(false),
 });
 
 export type courseFields = z.infer<typeof courseSchema>;

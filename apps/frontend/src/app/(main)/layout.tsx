@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import { AppSidebar } from "@/shared/components/ui/app-sidebar";
+import { AppSidebarSkeleton } from "@/shared/components/ui/app-sidebar-skeleton";
 import {
   SidebarInset,
   SidebarProvider,
@@ -12,7 +14,9 @@ export default function MainLayout({
 }) {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <Suspense fallback={<AppSidebarSkeleton />}>
+        <AppSidebar />
+      </Suspense>
       <SidebarInset>
         <header className="flex h-14 items-center gap-2 border-b border-border bg-background px-4">
           <SidebarTrigger className="-ml-1" />

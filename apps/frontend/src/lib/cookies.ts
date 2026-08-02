@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 
 const TOKENS = {
   access: "access_token",
@@ -39,4 +40,11 @@ export async function clearServerTokens() {
   const cookieStore = await cookies();
   cookieStore.delete(TOKENS.access);
   cookieStore.delete(TOKENS.refresh);
+}
+
+export function getProxyCookies(request: NextRequest) {
+  return {
+    accessToken: request.cookies.get(TOKENS.access)?.value,
+    refreshToken: request.cookies.get(TOKENS.refresh)?.value,
+  };
 }

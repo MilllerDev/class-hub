@@ -1,7 +1,7 @@
 "use server";
 
 import { api } from "@/lib/api";
-import { setServerTokens } from "@/lib/cookies";
+import { clearServerTokens, setServerTokens } from "@/lib/cookies";
 import { redirect } from "next/navigation";
 import { Auth, LoginRequest, RegisterRequest, User } from "./types";
 
@@ -46,5 +46,17 @@ async function resendActivation(email: string) {
   return { message: res.message, success: res.success };
 }
 
-export { activateAccount, login, register, resendActivation };
+async function updateSession(token: string) {
+  const res = await api.post<Auth>("/auth/refresh", { refreshToken: token });
+  const { data, success } = res;
+  if (success && data) {
+    const { accessToken, refreshToken } = data;
+    await setServerTokens({ accessToken, refreshToken });
+    return { success, role: data.role };
+  }
+  await clearServerTokens();
+  return { success };
+}
+
+export { activateAccount, login, register, resendActivation, updateSession };
 
