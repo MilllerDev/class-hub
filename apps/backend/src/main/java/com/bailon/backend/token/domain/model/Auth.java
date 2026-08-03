@@ -1,4 +1,4 @@
-package com.bailon.backend.auth.domain.model;
+package com.bailon.backend.token.domain.model;
 
 import com.bailon.backend.users.domain.model.UserRole;
 

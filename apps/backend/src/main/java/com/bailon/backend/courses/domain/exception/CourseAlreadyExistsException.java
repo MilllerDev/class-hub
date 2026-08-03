@@ -1,7 +1,10 @@
 package com.bailon.backend.courses.domain.exception;
 
-public class CourseAlreadyExistsException extends RuntimeException {
+import com.bailon.backend.config.exceptions.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class CourseAlreadyExistsException extends ApiException {
     public CourseAlreadyExistsException(String message) {
-        super(message);
+        super(HttpStatus.CONFLICT, message);
     }
 }

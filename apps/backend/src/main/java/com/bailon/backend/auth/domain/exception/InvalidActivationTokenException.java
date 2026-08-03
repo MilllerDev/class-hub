@@ -1,7 +1,10 @@
 package com.bailon.backend.auth.domain.exception;
 
-public class InvalidActivationTokenException extends RuntimeException {
+import com.bailon.backend.config.exceptions.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class InvalidActivationTokenException extends ApiException {
     public InvalidActivationTokenException(String message) {
-        super(message);
+        super(HttpStatus.UNAUTHORIZED, message);
     }
 }

@@ -6,7 +6,7 @@ import com.bailon.backend.courses.domain.model.Course;
 import com.bailon.backend.courses.infrastructure.mapper.CourseMapper;
 import com.bailon.backend.courses.infrastructure.rest.request.CourseRequest;
 import com.bailon.backend.courses.infrastructure.rest.request.PartialCourseRequest;
-import com.bailon.backend.users.domain.model.User;
+import com.bailon.backend.users.infrastructure.security.AppUserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,32 +29,33 @@ public class CourseController {
     private final CourseMapper mapper;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Course>>> findAll(@AuthenticationPrincipal User user) {
+    public ResponseEntity<ApiResponse<List<Course>>> findAll(@AuthenticationPrincipal AppUserPrincipal auth) {
+        List<Course> response = getAllCourses.execute(auth.user().getRole(), auth.user().getId());
         return ResponseEntity.ok(
-                ApiResponse.success("Lista de cursos", getAllCourses.execute(user.getRole(), user.getId()))
+                ApiResponse.success("Lista de cursos", response)
         );
     }
 
     @GetMapping("/{slug}")
     public ResponseEntity<ApiResponse<Course>> findBySlug(
             @PathVariable String slug,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal AppUserPrincipal auth
     ) {
         return ResponseEntity.ok(
-                ApiResponse.success("Curso encontrado", getCourse.execute(slug, user.getRole()))
+                ApiResponse.success("Curso encontrado", getCourse.execute(slug, auth.user().getRole()))
         );
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse<Course>> create(@Valid @RequestBody CourseRequest request) {
-        Course response = createCourse.execute(mapper.toDomain(request));
+        Course response = createCourse.execute(mapper.toDomain(request), request.useAi());
         return ResponseEntity.ok(
                 ApiResponse.success("Curso: " + request.name() + " creado exitosamente", response)
         );
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse<Course>> update(@PathVariable UUID id, @Valid @RequestBody PartialCourseRequest request) {
         Course course = mapper.toDomain(request);

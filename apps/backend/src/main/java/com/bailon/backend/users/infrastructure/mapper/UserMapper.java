@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper {
-    @Mapping(target = "authorities", ignore = true)
+public interface
+UserMapper {
     User toDomain(UserEntity entity);
 
     @Mapping(target = "createdAt", ignore = true)

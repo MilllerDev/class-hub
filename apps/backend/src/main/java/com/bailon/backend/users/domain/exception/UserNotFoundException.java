@@ -1,7 +1,10 @@
 package com.bailon.backend.users.domain.exception;
 
-public class UserNotFoundException extends RuntimeException {
+import com.bailon.backend.config.exceptions.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class UserNotFoundException extends ApiException {
     public UserNotFoundException(String message) {
-        super(message);
+        super(HttpStatus.NOT_FOUND, message);
     }
 }

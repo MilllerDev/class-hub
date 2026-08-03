@@ -26,7 +26,7 @@ public class CreateCourseService implements CreateCourseUseCase {
 
     @Override
     @Transactional
-    public Course execute(Course course) {
+    public Course execute(Course course, boolean useAi) {
         if (course.getUserId() != null) {
             if (!userRepository.existsUser(course.getUserId(), UserRole.TEACHER)) {
                 throw new InvalidTeacherException("No existe un docente al docente");
@@ -37,9 +37,10 @@ public class CreateCourseService implements CreateCourseUseCase {
             throw new CourseAlreadyExistsException(course.getName());
         }
         course.setEnabled(course.getUserId() != null);
-        if (course.getDescription() == null) {
-            course.setDescription(aiPort.genereteDetails(course.getName()));
+        Course saved = courseRepository.save(course);
+        if (useAi) {
+            aiPort.genereteDetails(saved, course.getName());
         }
-        return courseRepository.save(course);
+        return saved;
     }
 }

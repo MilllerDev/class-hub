@@ -3,6 +3,7 @@ package com.bailon.backend.profile.application.service;
 import com.bailon.backend.profile.application.port.ProfileRepository;
 import com.bailon.backend.profile.application.usecase.GetProfileUseCase;
 import com.bailon.backend.profile.application.usecase.GetProfilesUseCase;
+import com.bailon.backend.profile.domain.exception.ProfileNotFoundException;
 import com.bailon.backend.profile.domain.model.Profile;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +20,7 @@ public class GetProfileService implements GetProfileUseCase, GetProfilesUseCase 
 
     @Override
     public Profile execute(UUID userId) {
-        return repository.findByUser(userId).orElseThrow(
-                () -> new RuntimeException("Profile not found")
-        );
+        return repository.findByUser(userId).orElseThrow(ProfileNotFoundException::new);
     }
 
     @Override

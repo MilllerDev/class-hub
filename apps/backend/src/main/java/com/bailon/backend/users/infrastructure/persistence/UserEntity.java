@@ -35,6 +35,9 @@ public class UserEntity {
     @Column(name = "user_enabled", nullable = false)
     private boolean enabled;
 
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

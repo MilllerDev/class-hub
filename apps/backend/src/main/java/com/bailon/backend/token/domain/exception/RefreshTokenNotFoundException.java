@@ -1,7 +1,10 @@
 package com.bailon.backend.token.domain.exception;
 
-public class RefreshTokenNotFoundException extends RuntimeException {
+import com.bailon.backend.config.exceptions.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class RefreshTokenNotFoundException extends ApiException {
     public RefreshTokenNotFoundException(String message) {
-        super(message);
+        super(HttpStatus.UNAUTHORIZED, message);
     }
 }

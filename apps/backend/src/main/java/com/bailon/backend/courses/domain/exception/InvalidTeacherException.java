@@ -1,7 +1,10 @@
 package com.bailon.backend.courses.domain.exception;
 
-public class InvalidTeacherException extends RuntimeException {
+import com.bailon.backend.config.exceptions.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class InvalidTeacherException extends ApiException {
     public InvalidTeacherException(String message) {
-        super(message);
+        super(HttpStatus.BAD_REQUEST, message);
     }
 }

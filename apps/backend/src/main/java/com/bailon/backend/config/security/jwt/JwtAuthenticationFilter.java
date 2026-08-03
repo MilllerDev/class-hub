@@ -1,5 +1,6 @@
 package com.bailon.backend.config.security.jwt;
 
+import com.bailon.backend.token.application.port.JwtPort;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,15 +39,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         String token = header.substring(7);
-        String email = jwtPort.getEmailFromAccessToken(token);
-
-        if (jwtPort.validateAccessToken(token, email)) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities()
-            );
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        String email = jwtPort.subjectFromValidAccessToken(token).orElse(null);
+        if (email != null) {
+            try {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                if (userDetails.isEnabled()) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities()
+                    );
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            } catch (RuntimeException ignored) {
+            }
         }
         filterChain.doFilter(request, response);
     }

@@ -9,11 +9,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface TokenMapper {
-    @Mapping(target = "userId", source = "user.id")
-    Token toDomain(TokenEntity entity);
-
-    @Mapping(target = "user.id", source = "userId")
     @Mapping(target = "tokenHash", ignore = true)
+    @Mapping(target = "user.id", source = "userId")
     TokenEntity toEntity(Token token);
 
     @Mapping(target = "user.id", source = "userId")

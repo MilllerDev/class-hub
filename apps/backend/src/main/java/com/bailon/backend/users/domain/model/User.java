@@ -4,32 +4,29 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.jspecify.annotations.NonNull;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements UserDetails {
+public class User {
     private UUID id;
     private String email;
     private String password;
     private UserRole role;
     private boolean enabled;
+    private LocalDateTime lastLogin;
+    private LocalDateTime createdAt;
 
-    @Override
-    public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(role);
-    }
-
-    @Override
-    public @NonNull String getUsername() {
-        return email;
+    public static User createNewStudent(String email, String encodedPassword) {
+        User user = new User();
+        user.email = email;
+        user.password = encodedPassword;
+        user.role = UserRole.STUDENT;
+        user.enabled = false;
+        return user;
     }
 }

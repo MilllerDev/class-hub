@@ -13,6 +13,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActivationToken {
+    public static final long EXPIRATION_SECONDS = 900;
+
     private UUID id;
     private String token;
     private boolean used;
@@ -31,7 +33,17 @@ public class ActivationToken {
                 .token(generateToken())
                 .used(false)
                 .userId(userId)
+                .expiresAt(Instant.now().plusSeconds(EXPIRATION_SECONDS))
                 .build();
+    }
+
+    public boolean isExpired(Instant now) {
+        return expiresAt == null || expiresAt.isBefore(now);
+    }
+
+    public void markUsed() {
+        this.used = true;
+        this.usedAt = Instant.now();
     }
 }
 

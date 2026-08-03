@@ -1,4 +1,4 @@
-package com.bailon.backend.config.security.jwt;
+package com.bailon.backend.token.domain.model;
 
 import java.time.Instant;
 

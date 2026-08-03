@@ -20,8 +20,9 @@ public interface CourseMapper {
     @Mapping(target = "enabled", ignore = true)
     Course toDomain(CourseRequest request);
 
-    @Mapping(target = "slug", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "slug", ignore = true)
+    @Mapping(target = "enabled", ignore = true)
     Course toDomain(PartialCourseRequest request);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

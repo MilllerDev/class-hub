@@ -10,6 +10,7 @@ public record CourseRequest(
         @Size(min = 3, max = 80, message = "El nombre debe tener entre 3 y 80 caracteres")
         String name,
         String description,
+        boolean useAi,
         UUID userId
 ) {
 }

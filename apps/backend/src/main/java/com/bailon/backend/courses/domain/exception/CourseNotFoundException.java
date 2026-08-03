@@ -1,7 +1,10 @@
 package com.bailon.backend.courses.domain.exception;
 
-public class CourseNotFoundException extends RuntimeException {
+import com.bailon.backend.config.exceptions.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class CourseNotFoundException extends ApiException {
     public CourseNotFoundException(String message) {
-        super(message);
+        super(HttpStatus.NOT_FOUND, message);
     }
 }

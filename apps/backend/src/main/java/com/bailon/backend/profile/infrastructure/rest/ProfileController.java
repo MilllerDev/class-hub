@@ -6,7 +6,7 @@ import com.bailon.backend.profile.application.usecase.GetProfilesUseCase;
 import com.bailon.backend.profile.domain.model.Profile;
 import com.bailon.backend.profile.infrastructure.mapper.ProfileMapper;
 import com.bailon.backend.profile.infrastructure.rest.response.ProfileResponse;
-import com.bailon.backend.users.domain.model.User;
+import com.bailon.backend.users.infrastructure.security.AppUserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,16 +26,16 @@ public class ProfileController {
     private final ProfileMapper mapper;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<ProfileResponse>> getProfile(@AuthenticationPrincipal User user) {
+    public ResponseEntity<ApiResponse<ProfileResponse>> getProfile(@AuthenticationPrincipal AppUserPrincipal auth) {
         return ResponseEntity.ok(
-                ApiResponse.success("Perfil encontrado", mapper.toDto(getProfile.execute(user.getId())))
+                ApiResponse.success("Perfil encontrado", mapper.toDto(getProfile.execute(auth.user().getId())))
         );
     }
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<ApiResponse<List<ProfileResponse>>> getProfiles(@AuthenticationPrincipal User user) {
-        List<Profile> profiles = getProfiles.list(user.getId());
+    public ResponseEntity<ApiResponse<List<ProfileResponse>>> getProfiles(@AuthenticationPrincipal AppUserPrincipal auth) {
+        List<Profile> profiles = getProfiles.list(auth.user().getId());
         return ResponseEntity.ok(
                 ApiResponse.success("Listado de usuarios", profiles.stream().map(mapper::toDto).toList())
         );

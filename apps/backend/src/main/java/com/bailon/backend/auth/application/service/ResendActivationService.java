@@ -2,7 +2,7 @@ package com.bailon.backend.auth.application.service;
 
 import com.bailon.backend.auth.application.usecase.ResendActivationUseCase;
 import com.bailon.backend.auth.domain.event.ActivationEmailRequestedEvent;
-import com.bailon.backend.token.application.service.TokenIssuerService;
+import com.bailon.backend.token.application.port.TokenIssuerPort;
 import com.bailon.backend.users.application.port.UserRepository;
 import com.bailon.backend.users.domain.model.User;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ResendActivationService implements ResendActivationUseCase {
     private final UserRepository userRepository;
-    private final TokenIssuerService tokenIssuer;
+    private final TokenIssuerPort tokenIssuer;
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
