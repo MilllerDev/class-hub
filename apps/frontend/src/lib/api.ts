@@ -1,5 +1,6 @@
 import { ApiResponse } from "@/shared/types/api-response";
-import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { getServerTokens } from "./cookies";
 
 const BASE_URL = process.env.API_URL;
 
@@ -7,22 +8,27 @@ async function request<T>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<ApiResponse<T>> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("access_token")?.value;
+  const { accessToken } = await getServerTokens();
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     ...options.headers,
   };
 
-  if (token) {
-    (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+  if (accessToken) {
+    (headers as Record<string, string>)["Authorization"] =
+      `Bearer ${accessToken}`;
   }
 
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
     headers,
   });
+
+  if (res.status === 401 || res.status === 403) {
+    redirect("/api/auth/clear-session");
+  }
+
   const data = await res.json();
   return data;
 }
