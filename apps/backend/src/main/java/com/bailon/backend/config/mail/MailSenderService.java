@@ -4,7 +4,6 @@ import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -19,7 +18,6 @@ public class MailSenderService implements MailSenderPort {
         this.templateEngine = templateEngine;
     }
 
-    @Async("mailExecutor")
     @Override
     public void sendEmail(MailBody body) {
         try {
@@ -34,8 +32,8 @@ public class MailSenderService implements MailSenderPort {
             String html = templateEngine.process(body.template(), context);
             helper.setText(html, true);
             mailSender.send(message);
-        } catch (Exception E) {
-            throw new MailSendException("Error al enviar el mail", E);
+        } catch (Exception e) {
+            throw new MailSendException("Error al enviar el mail", e);
         }
     }
 }

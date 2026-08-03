@@ -9,7 +9,6 @@ import com.bailon.backend.token.infrastructure.persistence.repository.TokenRepos
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -28,12 +27,6 @@ public class TokenRepositoryAdapter implements TokenRepositoryPort {
         TokenEntity entity = mapper.toEntity(token);
         entity.setTokenHash(TokenHashUtil.hash(token.getToken()));
         repositoryJpa.save(entity);
-    }
-
-    @Override
-    public Optional<Token> findByToken(String token) {
-        String hash = TokenHashUtil.hash(token);
-        return repositoryJpa.findByTokenHash(hash).map(mapper::toDomain);
     }
 
     @Override

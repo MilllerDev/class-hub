@@ -5,6 +5,7 @@ import com.bailon.backend.profile.domain.model.Profile;
 import com.bailon.backend.profile.infrastructure.mapper.ProfileMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,7 +25,12 @@ public class ProfileRepositoryAdapter implements ProfileRepository {
     }
 
     @Override
-    public Optional<Profile> findByUserId(UUID userId) {
+    public Optional<Profile> findByUser(UUID userId) {
         return repositoryJpa.findByUserId(userId).map(mapper::toDomain);
+    }
+
+    @Override
+    public List<Profile> findAll(UUID userId) {
+        return repositoryJpa.findByUserIdNot(userId).stream().map(mapper::toDomain).toList();
     }
 }

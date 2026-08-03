@@ -1,7 +1,10 @@
 package com.bailon.backend.token.domain.exception;
 
-public class InvalidRefreshTokenException extends RuntimeException {
-    public InvalidRefreshTokenException(String message) {
-        super(message);
+import com.bailon.backend.config.exceptions.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class InvalidRefreshTokenException extends ApiException {
+    public InvalidRefreshTokenException() {
+        super(HttpStatus.UNAUTHORIZED, "Token inválido o expirado");
     }
 }

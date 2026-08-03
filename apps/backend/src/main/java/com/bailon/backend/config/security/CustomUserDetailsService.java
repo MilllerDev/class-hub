@@ -1,6 +1,8 @@
 package com.bailon.backend.config.security;
 
 import com.bailon.backend.users.application.port.UserRepository;
+import com.bailon.backend.users.domain.model.User;
+import com.bailon.backend.users.infrastructure.security.AppUserPrincipal;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,8 +19,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public @NonNull UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).orElseThrow(
+        User user = userRepository.findByEmail(username).orElseThrow(
                 () -> new UsernameNotFoundException("No se encontró el email")
         );
+        return new AppUserPrincipal(user);
     }
 }

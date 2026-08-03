@@ -1,7 +1,10 @@
 package com.bailon.backend.users.domain.exception;
 
-public class UserAlreadyExistsException extends RuntimeException {
+import com.bailon.backend.config.exceptions.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class UserAlreadyExistsException extends ApiException {
     public UserAlreadyExistsException(String message) {
-        super(message);
+        super(HttpStatus.CONFLICT, message);
     }
 }

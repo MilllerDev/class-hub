@@ -19,6 +19,8 @@ spring:
         index-type: HNSW
         distance-type: cosine_distance
         schema-name: public
+        table-name: ai_docs
+        initialize-schema: true
     google:
       genai:
         api-key: ${GEMINI_API_KEY}
@@ -28,6 +30,7 @@ spring:
         embedding:
           text:
             model: ${GEMINI_EMBEDDING_MODEL}
+            dimensions: 1536
           api-key: ${GEMINI_API_KEY}
   mail:
     host: smtp.gmail.com
@@ -38,6 +41,11 @@ spring:
           auth: true
           starttls:
             enable: true
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 25MB
+      enabled: true
 
 jwt:
   access-secret: ${JWT_ACCESS}

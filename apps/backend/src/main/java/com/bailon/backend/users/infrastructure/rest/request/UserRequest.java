@@ -10,7 +10,7 @@ public record UserRequest(
         String email,
 
         @NotBlank(message = "La contraseña es obligatoria")
-        @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+        @Size(min = 6, message = "La contraseña debe tener al menos 8 caracteres")
         String password
 ) {
 }
