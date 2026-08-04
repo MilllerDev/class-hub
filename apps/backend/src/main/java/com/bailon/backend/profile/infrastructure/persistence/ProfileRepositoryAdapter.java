@@ -3,6 +3,7 @@ package com.bailon.backend.profile.infrastructure.persistence;
 import com.bailon.backend.profile.application.port.ProfileRepository;
 import com.bailon.backend.profile.domain.model.Profile;
 import com.bailon.backend.profile.infrastructure.mapper.ProfileMapper;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,5 +33,10 @@ public class ProfileRepositoryAdapter implements ProfileRepository {
     @Override
     public List<Profile> findAll(UUID userId) {
         return repositoryJpa.findByUserIdNot(userId).stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Profile> findLatest() {
+        return repositoryJpa.findTop5ByOrderByUserCreatedAtDesc().stream().map(mapper::toDomain).toList();
     }
 }

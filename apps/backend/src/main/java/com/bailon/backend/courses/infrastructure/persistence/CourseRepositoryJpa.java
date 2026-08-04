@@ -17,6 +17,8 @@ public interface CourseRepositoryJpa extends JpaRepository<CourseEntity, UUID> {
 
     List<CourseEntity> findByEnabledTrueAndUserId(UUID userId);
 
+    List<CourseEntity> findTop5ByOrderByCreatedAtDesc();
+
     boolean existsByNameAndSlug(String name, String slug);
 
     boolean existsBySlug(String slug);

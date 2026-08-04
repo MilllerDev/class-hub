@@ -27,16 +27,16 @@ public class CreateCourseService implements CreateCourseUseCase {
     @Override
     @Transactional
     public Course execute(Course course, boolean useAi) {
-        if (course.getUserId() != null) {
-            if (!userRepository.existsUser(course.getUserId(), UserRole.TEACHER)) {
-                throw new InvalidTeacherException("No existe un docente al docente");
+        if (course.getUser() != null && course.getUser().getId() != null) {
+            if (!userRepository.existsUser(course.getUser().getId(), UserRole.TEACHER)) {
+                throw new InvalidTeacherException("No existe el docente");
             }
         }
         course.setSlug(Utils.generateSlug(course.getName()));
         if (courseRepository.alreadyExists(course.getName(), course.getSlug())) {
             throw new CourseAlreadyExistsException(course.getName());
         }
-        course.setEnabled(course.getUserId() != null);
+        course.setEnabled(course.getUser() != null);
         Course saved = courseRepository.save(course);
         if (useAi) {
             aiPort.genereteDetails(saved, course.getName());

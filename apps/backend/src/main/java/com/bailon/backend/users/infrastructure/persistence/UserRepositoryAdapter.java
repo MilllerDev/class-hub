@@ -50,4 +50,9 @@ public class UserRepositoryAdapter implements UserRepository {
     public Optional<User> findByIdInactive(UUID id) {
         return repositoryJpa.findByIdAndEnabledFalse(id).map(userMapper::toDomain);
     }
+
+    @Override
+    public long count() {
+        return repositoryJpa.count();
+    }
 }

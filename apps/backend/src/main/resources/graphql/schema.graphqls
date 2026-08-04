@@ -1,0 +1,40 @@
+type Course {
+    id: ID
+    name: String
+    description:String
+    slug: String
+    enabled: Boolean
+    createdAt: String
+    user: User
+}
+
+type Profile {
+    id: ID,
+    name: String
+    lastName: String
+    avatarUrl: String
+    user: User!
+}
+
+type User {
+    id:ID
+    email: String
+    role: String
+    enabled: Boolean
+    lastLogin: String
+    createdAt: String
+}
+
+type Dashboard {
+    userCount: Int!
+    courseCount: Int!
+    latestProfiles: [Profile!]!
+    latestCourses: [Course!]!
+}
+
+type Query {
+    course(slug:String!): Course
+    courses: [Course!]!
+    profiles:[Profile!]!
+    dashboard: Dashboard!
+}

@@ -3,6 +3,7 @@ package com.bailon.backend.courses.infrastructure.persistence;
 import com.bailon.backend.courses.application.port.CourseRepository;
 import com.bailon.backend.courses.domain.model.Course;
 import com.bailon.backend.courses.infrastructure.mapper.CourseMapper;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -48,6 +49,16 @@ public class CourseRepositoryAdapter implements CourseRepository {
     @Override
     public List<Course> findAllOwnedBy(UUID userId) {
         return repositoryJpa.findByEnabledTrueAndUserId(userId).stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Course> findLatest() {
+        return repositoryJpa.findTop5ByOrderByCreatedAtDesc().stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public long count() {
+        return repositoryJpa.count();
     }
 
     @Override

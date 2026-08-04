@@ -20,4 +20,6 @@ public interface UserRepository {
     Optional<User> findById(UUID id);
 
     Optional<User> findByIdInactive(UUID id);
+
+    long count();
 }
