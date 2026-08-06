@@ -1,7 +1,10 @@
 package com.bailon.backend.courses.infrastructure.rest;
 
 import com.bailon.backend.config.ApiResponse;
-import com.bailon.backend.courses.application.usecase.*;
+import com.bailon.backend.courses.application.usecase.CreateCourseUseCase;
+import com.bailon.backend.courses.application.usecase.DeleteCourseUseCase;
+import com.bailon.backend.courses.application.usecase.GetCourseUseCase;
+import com.bailon.backend.courses.application.usecase.UpdateCourseUseCase;
 import com.bailon.backend.courses.domain.model.Course;
 import com.bailon.backend.courses.infrastructure.mapper.CourseMapper;
 import com.bailon.backend.courses.infrastructure.rest.request.CourseRequest;
@@ -14,27 +17,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/courses")
 @RequiredArgsConstructor
 public class CourseController {
-    private final GetAllCoursesUseCase getAllCourses;
     private final GetCourseUseCase getCourse;
     private final CreateCourseUseCase createCourse;
     private final DeleteCourseUseCase deleteCourse;
     private final UpdateCourseUseCase updateCourse;
     private final CourseMapper mapper;
-
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<Course>>> findAll(@AuthenticationPrincipal AppUserPrincipal auth) {
-        List<Course> response = getAllCourses.execute(auth.user().getRole(), auth.user().getId());
-        return ResponseEntity.ok(
-                ApiResponse.success("Lista de cursos", response)
-        );
-    }
 
     @GetMapping("/{slug}")
     public ResponseEntity<ApiResponse<Course>> findBySlug(

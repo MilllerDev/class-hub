@@ -1,6 +1,5 @@
 package com.bailon.backend.courses.domain.model;
 
-import com.bailon.backend.users.domain.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,7 @@ public class Course {
     private String name;
     private String description;
     private String slug;
-    private User user;
+    private UUID userId;
     private boolean enabled;
     private LocalDateTime createdAt;
 }
