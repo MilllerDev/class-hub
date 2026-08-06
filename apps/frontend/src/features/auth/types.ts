@@ -23,4 +23,6 @@ export type User = {
   email: string;
   role: string;
   enabled: boolean;
+  lastLogin: string;
+  createdAt: string;
 };

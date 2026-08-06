@@ -6,6 +6,4 @@ export type Profile = {
   lastName: string;
   avatarUrl: string | null;
   user: User;
-  joinedDate?: string | null;
-  lastActive?: string | null;
 };

@@ -23,7 +23,7 @@ async function createCourse(request: CourseRequest) {
 }
 
 async function updateCourse(id: string, request: CourseRequest) {
-  const res = await api.put<Course>(`/courses/${id}`, request);
+  const res = await api.patch<Course>(`/courses/${id}`, request);
   if (res.success) {
     revalidatePath("/courses");
   }
