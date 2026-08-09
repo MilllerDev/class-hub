@@ -1,12 +1,18 @@
 "use server";
 
+import { getCoursesForAdmin, getCoursesForStudent as getCoursesForStudentQuery } from "@/graphql/queries/courses";
+import { Course as CourseQl } from "@/graphql/types";
 import { api } from "@/lib/api";
+import { graphql } from "@/lib/graphql";
 import { revalidatePath } from "next/cache";
 import { Course, CourseRequest } from "./types";
 
 async function getCourses() {
-  const res = await api.get<Course[]>("/courses");
-  return res;
+  return await graphql.query<{ courses: CourseQl[] }>(getCoursesForAdmin);
+}
+
+async function getCoursesForStudent() {
+  return await graphql.query<{ courses: CourseQl[] }>(getCoursesForStudentQuery);
 }
 
 async function getCourse(idOrSlug: string) {
@@ -47,6 +53,8 @@ export {
   deleteCourse,
   getCourse,
   getCourses,
+  getCoursesForStudent,
   updateCourse,
-  upsertCourse,
+  upsertCourse
 };
+

@@ -7,6 +7,19 @@ import {
   Users,
 } from "lucide-react";
 
+const roleLabels: Record<string, string> = {
+  admin: "Administrador",
+  teacher: "Docente",
+  student: "Estudiante",
+};
+
+const roleColors: Record<string, string> = {
+  admin: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
+  teacher:
+    "bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400",
+  student: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+};
+
 function StatCard({
   label,
   value,
@@ -27,15 +40,21 @@ function StatCard({
   );
 }
 
-function StatusBadge({
-  status,
-  activeLabel = "Activo",
-  inactiveLabel = "Inactivo",
-}: {
-  status: boolean;
-  activeLabel?: string;
-  inactiveLabel?: string;
-}) {
+function RoleBadge({ role }: { role: string }) {
+  const key = role.toLowerCase();
+  const label = roleLabels[key] ?? role;
+  const color = roleColors[key] ?? "bg-muted text-muted-foreground";
+
+  return (
+    <span
+      className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${color}`}
+    >
+      {label}
+    </span>
+  );
+}
+
+function StatusBadge({ status }: { status: boolean }) {
   const color = status
     ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
     : "bg-muted text-muted-foreground";
@@ -44,9 +63,21 @@ function StatusBadge({
     <span
       className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${color}`}
     >
-      {status ? activeLabel : inactiveLabel}
+      {status ? "Activo" : "Inactivo"}
     </span>
   );
+}
+
+function formatDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "—";
+  }
+  return new Intl.DateTimeFormat("es", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
 }
 
 export default async function AdminDashboard() {
@@ -59,8 +90,9 @@ export default async function AdminDashboard() {
     { label: "Usuarios nuevos (mes)", value: 23, icon: UserPlus },
     { label: "Tareas por revisar", value: 67, icon: ClipboardCheck },
   ];
+
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8">
+    <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8 lg:px-6">
       <section>
         <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Panel de administración
@@ -70,14 +102,14 @@ export default async function AdminDashboard() {
         </p>
       </section>
 
-      <section className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+      <section className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
         {stats.map((stat) => (
           <StatCard key={stat.label} {...stat} />
         ))}
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <section className="space-y-3">
+      <div className="grid items-start gap-6 xl:grid-cols-2">
+        <section className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground">
             Últimos usuarios registrados
           </h2>
@@ -85,34 +117,37 @@ export default async function AdminDashboard() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-muted/50">
-                  <th className="px-4 py-2.5 text-left font-medium text-muted-foreground">
-                    Nombre
+                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                    Nombres y Apellidos
                   </th>
-                  <th className="px-4 py-2.5 text-left font-medium text-muted-foreground hidden sm:table-cell">
-                    Email
-                  </th>
-                  <th className="px-4 py-2.5 text-left font-medium text-muted-foreground">
+                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                     Rol
                   </th>
-                  <th className="px-4 py-2.5 text-left font-medium text-muted-foreground">
+                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                     Estado
+                  </th>
+                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                    Fecha de registro
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {latestProfiles.map(({ id, name, user }) => (
-                  <tr key={id} className="bg-card">
-                    <td className="px-4 py-2.5 font-medium text-card-foreground">
-                      {name}
+                {latestProfiles.map(({ id, name, lastName, user }) => (
+                  <tr
+                    key={id}
+                    className="bg-card transition-colors hover:bg-muted/30"
+                  >
+                    <td className="px-4 py-3 font-medium text-card-foreground line-clamp-1 truncate">
+                      {name} {lastName}
                     </td>
-                    <td className="px-4 py-2.5 text-muted-foreground hidden sm:table-cell">
-                      {user.email}
+                    <td className="px-4 py-3">
+                      <RoleBadge role={user.role} />
                     </td>
-                    <td className="px-4 py-2.5 text-muted-foreground">
-                      {user.role}
-                    </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 py-3">
                       <StatusBadge status={user.enabled} />
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                      {formatDate(user.createdAt)}
                     </td>
                   </tr>
                 ))}
@@ -121,40 +156,47 @@ export default async function AdminDashboard() {
           </div>
         </section>
 
-        <section className="space-y-3">
+        <section className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground">
-            Últimos cursos creados
+            Últimos cursos agregados
           </h2>
           <div className="overflow-hidden rounded-xl border border-border">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-muted/50">
-                  <th className="px-4 py-2.5 text-left font-medium text-muted-foreground">
+                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                     Curso
                   </th>
-                  <th className="px-4 py-2.5 text-left font-medium text-muted-foreground hidden sm:table-cell">
+                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                     Docente
                   </th>
-                  <th className="px-4 py-2.5 text-left font-medium text-muted-foreground">
+                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                     Estado
+                  </th>
+                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                    Creado
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {latestCourses.map((course) => (
-                  <tr key={course.id} className="bg-card">
-                    <td className="px-4 py-2.5 font-medium text-card-foreground">
+                  <tr
+                    key={course.id}
+                    className="bg-card transition-colors hover:bg-muted/30"
+                  >
+                    <td className="px-4 py-3 font-medium text-card-foreground">
                       {course.name}
                     </td>
-                    <td className="px-4 py-2.5 text-muted-foreground hidden sm:table-cell">
-                      {course.user ? course.user.email : "Sin docente"}
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {course.profile
+                        ? `${course.profile.name} ${course.profile.lastName}`.trim()
+                        : "Sin docente"}
                     </td>
-                    <td className="px-4 py-2.5">
-                      <StatusBadge
-                        status={course.enabled}
-                        activeLabel="Publicado"
-                        inactiveLabel="Borrador"
-                      />
+                    <td className="px-4 py-3">
+                      <StatusBadge status={course.enabled} />
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                      {formatDate(course.createdAt)}
                     </td>
                   </tr>
                 ))}

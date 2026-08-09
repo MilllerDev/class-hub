@@ -2,8 +2,7 @@ import { getCourses } from "@/features/courses/action";
 import { CourseTableRow } from "./course-table-row";
 
 export async function CoursesTable() {
-  const result = await getCourses();
-  const courses = result.success ? result.data : [];
+  const { courses } = await getCourses();
 
   if (courses.length === 0) {
     return (
@@ -24,6 +23,9 @@ export async function CoursesTable() {
               </th>
               <th className="hidden max-w-50 px-4 py-3 text-left font-medium text-muted-foreground sm:table-cell">
                 Descripción
+              </th>
+              <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground sm:table-cell">
+                Docente
               </th>
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                 Estado
@@ -56,6 +58,9 @@ export function CoursesTableSkeleton() {
             <th className="hidden max-w-50 px-4 py-3 text-left font-medium text-muted-foreground sm:table-cell">
               Descripción
             </th>
+            <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground sm:table-cell">
+              Docente
+            </th>
             <th className="px-4 py-3 text-left font-medium text-muted-foreground">
               Estado
             </th>
@@ -72,6 +77,9 @@ export function CoursesTableSkeleton() {
               </td>
               <td className="hidden px-4 py-3 sm:table-cell">
                 <div className="h-4 w-1/2 animate-pulse rounded bg-muted" />
+              </td>
+              <td className="hidden px-4 py-3 sm:table-cell">
+                <div className="h-4 w-1/3 animate-pulse rounded bg-muted" />
               </td>
               <td className="px-4 py-3">
                 <div className="h-5 w-16 animate-pulse rounded-full bg-muted" />

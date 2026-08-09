@@ -1,15 +1,6 @@
 import { getProfiles } from "@/features/profiles/action";
 import { ProfileTableRow } from "./profile-table-row";
 
-const mockJoinedDates = [
-  "28 jul 2026",
-  "27 jul 2026",
-  "26 jul 2026",
-  "25 jul 2026",
-  "24 jul 2026",
-  "22 jul 2026",
-];
-
 export async function ProfilesTable() {
   const result = await getProfiles();
   const profiles = result.success ? result.data : [];
@@ -42,21 +33,14 @@ export async function ProfilesTable() {
             <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground md:table-cell">
               Registro
             </th>
+            <th className="px-4 py-3 text-right font-medium text-muted-foreground">
+              Acciones
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
-          {profiles.map((profile, i) => (
-            <ProfileTableRow
-              key={profile.id}
-              profile={
-                profile.joinedDate
-                  ? profile
-                  : {
-                      ...profile,
-                      joinedDate: mockJoinedDates[i % mockJoinedDates.length],
-                    }
-              }
-            />
+          {profiles.map((profile) => (
+            <ProfileTableRow key={profile.id} profile={profile} />
           ))}
         </tbody>
       </table>
@@ -85,6 +69,9 @@ export function ProfilesTableSkeleton() {
             <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground md:table-cell">
               Registro
             </th>
+            <th className="px-4 py-3 text-right font-medium text-muted-foreground">
+              Acciones
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -107,6 +94,12 @@ export function ProfilesTableSkeleton() {
               </td>
               <td className="hidden px-4 py-3 md:table-cell">
                 <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+              </td>
+              <td className="px-4 py-3">
+                <div className="flex items-center justify-end gap-1">
+                  <div className="size-7 animate-pulse rounded-md bg-muted" />
+                  <div className="size-7 animate-pulse rounded-md bg-muted" />
+                </div>
               </td>
             </tr>
           ))}

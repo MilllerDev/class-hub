@@ -1,5 +1,3 @@
-import { User } from "../auth/types";
-
 export type Course = {
   id: string;
   name: string;
@@ -7,7 +5,7 @@ export type Course = {
   slug: string;
   enabled: boolean;
   createdAt: string;
-  user: User | null;
+  userId: string | null;
 };
 
 export type CourseRequest = {

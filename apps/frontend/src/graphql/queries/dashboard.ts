@@ -1,1 +1,26 @@
-export const dashboard = `query { dashboard { courseCount latestProfiles { id name lastName user { email role enabled } } latestCourses { id name enabled user { email } } userCount } }`;
+export const dashboard = `query {
+  dashboard {
+    courseCount
+    latestProfiles {
+      id
+      name
+      lastName
+      user {
+        role
+        createdAt
+        enabled
+      }
+    }
+    latestCourses {
+      id
+      name
+      createdAt
+      enabled
+      profile {
+        name
+        lastName
+      }
+    }
+    userCount
+  }
+}`;

@@ -1,6 +1,7 @@
 import type { Profile } from "@/features/profiles/types";
 import { User } from "lucide-react";
 import Image from "next/image";
+import { ProfileRowActions } from "./profile-row-actions";
 
 const roleLabels: Record<string, string> = {
   admin: "Administrador",
@@ -44,15 +45,16 @@ function StatusBadge({ enabled }: { enabled: boolean }) {
 }
 
 export function ProfileTableRow({ profile }: { profile: Profile }) {
-  const fullName = `${profile.name} ${profile.lastName}`;
+  const { name, lastName, user, avatarUrl } = profile;
+  const fullName = `${name} ${lastName}`;
 
   return (
     <tr className="bg-card transition-colors hover:bg-muted/30">
       <td className="px-4 py-3">
         <div className="flex items-center gap-3">
-          {profile.avatarUrl ? (
+          {avatarUrl ? (
             <Image
-              src={profile.avatarUrl}
+              src={avatarUrl}
               alt={fullName}
               width={32}
               height={32}
@@ -70,13 +72,20 @@ export function ProfileTableRow({ profile }: { profile: Profile }) {
         {profile.user.email}
       </td>
       <td className="px-4 py-3">
-        <RoleBadge role={profile.user.role} />
+        <RoleBadge role={user.role} />
       </td>
       <td className="px-4 py-3">
-        <StatusBadge enabled={profile.user.enabled} />
+        <StatusBadge enabled={user.enabled} />
       </td>
       <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
-        {profile.joinedDate ?? "—"}
+        {profile.user.createdAt ?? "—"}
+      </td>
+      <td className="px-4 py-3">
+        <ProfileRowActions
+          role={user.role}
+          enabled={user.enabled}
+          userName={fullName}
+        />
       </td>
     </tr>
   );

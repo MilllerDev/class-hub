@@ -1,8 +1,10 @@
 "use client";
 
 import { upsertCourse } from "@/features/courses/action";
+import { SelectTeacher } from "@/features/courses/components/select-teacher";
 import { courseSchema } from "@/features/courses/schemas";
-import type { Course, CourseRequest } from "@/features/courses/types";
+import type { CourseRequest } from "@/features/courses/types";
+import type { Course } from "@/graphql/types";
 import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
@@ -37,7 +39,7 @@ export function CourseFormDialog({ course }: { course?: Course }) {
     defaultValues: {
       name: course?.name,
       description: course?.description,
-      userId: course?.userId,
+      userId: course?.profile?.user?.id,
       useAi: false,
     },
   });
@@ -49,7 +51,6 @@ export function CourseFormDialog({ course }: { course?: Course }) {
       setOpen(false);
       reset();
     }
-    console.log(data);
     toast.add({ type: success ? "success" : "error", description: message });
   };
 
@@ -95,6 +96,21 @@ export function CourseFormDialog({ course }: { course?: Course }) {
               {errors.name && (
                 <p className="text-xs text-destructive">
                   {errors.name.message as string}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Controller
+                name="userId"
+                control={control}
+                render={({ field }) => (
+                  <SelectTeacher value={field.value} onChange={field.onChange} />
+                )}
+              />
+              {errors.userId && (
+                <p className="text-xs text-destructive">
+                  {errors.userId.message as string}
                 </p>
               )}
             </div>
