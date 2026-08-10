@@ -11,15 +11,19 @@ public interface CourseMapper {
     @Mapping(target = "userId", source = "user.id")
     Course toDomain(CourseEntity entity);
 
-    @Mapping(target = "user.id", source = "userId")
+    @Mapping(target = "user", ignore = true)
     CourseEntity toEntity(Course course);
 
-    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
     Course toDomain(CourseRequest request);
 
-    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
     Course toDomain(PartialCourseRequest request);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "slug", ignore = true)
+    @Mapping(target = "enabled", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void toDomain(Course course, @MappingTarget Course update);
 }

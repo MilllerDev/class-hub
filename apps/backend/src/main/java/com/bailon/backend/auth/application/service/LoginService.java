@@ -11,8 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class LoginService implements LoginUseCase {
@@ -28,7 +26,8 @@ public class LoginService implements LoginUseCase {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new UserNotFoundException("Usuario no encontrado")
         );
-        user.setLastLogin(LocalDateTime.now());
+        user.recordLogin();
+        userRepository.save(user);
         return tokenIssuer.issueToken(user);
     }
 }

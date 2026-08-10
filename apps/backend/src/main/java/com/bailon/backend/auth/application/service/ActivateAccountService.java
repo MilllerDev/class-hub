@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +31,11 @@ public class ActivateAccountService implements ActivationAccountUseCase {
             throw new InvalidActivationTokenException("Token de activación expirado");
         }
         activation.markUsed();
-        User user = userRepository.findByIdInactive(activation.getUserId()).orElseThrow(
+        User user = userRepository.findByIdPendingActivation(activation.getUserId()).orElseThrow(
                 () -> new InvalidActivationTokenException("Usuario no encontrado o inactivo")
         );
-        user.setEnabled(true);
-        user.setLastLogin(LocalDateTime.now());
+        user.activate();
+        user.recordLogin();
         userRepository.save(user);
         activationTokenPort.markUsed(activation.getId(), activation.getUsedAt());
         return tokenIssuer.issueToken(user);

@@ -27,8 +27,8 @@ public class CreateCourseService implements CreateCourseUseCase {
     @Override
     @Transactional
     public Course execute(Course course, boolean useAi) {
-        if (course.getId() != null) {
-            if (!userRepository.existsUser(course.getId(), UserRole.TEACHER)) {
+        if (course.getUserId() != null) {
+            if (!userRepository.hasRole(course.getUserId(), UserRole.TEACHER)) {
                 throw new InvalidTeacherException("No existe el docente");
             }
         }

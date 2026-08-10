@@ -53,7 +53,7 @@ public class CourseController {
     public ResponseEntity<ApiResponse<Course>> update(@PathVariable UUID id, @Valid @RequestBody PartialCourseRequest request) {
         Course course = mapper.toDomain(request);
         return ResponseEntity.ok(
-                ApiResponse.success("Curso actualizado", updateCourse.execute(id, course))
+                ApiResponse.success("Curso actualizado", updateCourse.execute(id, course, request.useAi()))
         );
     }
 

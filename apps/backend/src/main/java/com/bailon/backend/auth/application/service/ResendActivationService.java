@@ -20,7 +20,7 @@ public class ResendActivationService implements ResendActivationUseCase {
     @Override
     @Transactional
     public void execute(String email) {
-        User user = userRepository.findByEmailInactive(email).orElse(null);
+        User user = userRepository.findByEmailPendingActivation(email).orElse(null);
         if (user == null) {
             return;
         }
