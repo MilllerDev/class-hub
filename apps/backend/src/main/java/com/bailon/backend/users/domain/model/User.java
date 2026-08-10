@@ -1,5 +1,8 @@
 package com.bailon.backend.users.domain.model;
 
+import com.bailon.backend.users.domain.exception.AccountAlreadyActiveException;
+import com.bailon.backend.users.domain.exception.AccountAlreadyDeactivatedException;
+import com.bailon.backend.users.domain.exception.RoleAlreadyAssignedException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,5 +31,30 @@ public class User {
         user.role = UserRole.STUDENT;
         user.enabled = false;
         return user;
+    }
+
+    public void activate() {
+        if (this.enabled) {
+            throw new AccountAlreadyActiveException("La cuenta ya está activa");
+        }
+        this.enabled = true;
+    }
+
+    public void deactivate() {
+        if (!this.enabled) {
+            throw new AccountAlreadyDeactivatedException("La cuenta ya está desactivada");
+        }
+        this.enabled = false;
+    }
+
+    public void changeRole(UserRole role) {
+        if (this.role == role) {
+            throw new RoleAlreadyAssignedException("El usuario ya tiene el rol: " + role.name().toLowerCase());
+        }
+        this.role = role;
+    }
+
+    public void recordLogin() {
+        this.lastLogin = LocalDateTime.now();
     }
 }

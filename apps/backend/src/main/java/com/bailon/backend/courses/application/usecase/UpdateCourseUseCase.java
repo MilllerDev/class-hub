@@ -5,5 +5,5 @@ import com.bailon.backend.courses.domain.model.Course;
 import java.util.UUID;
 
 public interface UpdateCourseUseCase {
-    Course execute(UUID id, Course course);
+    Course execute(UUID id, Course course, boolean useAi);
 }

@@ -14,21 +14,21 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserRepositoryAdapter implements UserRepository {
     private final UserRepositoryJpa repositoryJpa;
-    private final UserMapper userMapper;
+    private final UserMapper mapper;
 
     @Override
     public User save(User user) {
-        return userMapper.toDomain(repositoryJpa.save(userMapper.toEntity(user)));
+        return mapper.toDomain(repositoryJpa.save(mapper.toEntity(user)));
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return repositoryJpa.findByEmail(email).map(userMapper::toDomain);
+        return repositoryJpa.findByEmail(email).map(mapper::toDomain);
     }
 
     @Override
-    public Optional<User> findByEmailInactive(String email) {
-        return repositoryJpa.findByEmailAndEnabledFalse(email).map(userMapper::toDomain);
+    public Optional<User> findByEmailPendingActivation(String email) {
+        return repositoryJpa.findByEmailAndEnabledFalse(email).map(mapper::toDomain);
     }
 
     @Override
@@ -37,17 +37,22 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public boolean existsUser(UUID id, UserRole role) {
-        return repositoryJpa.existsByIdAndRole(id, role);
+    public boolean hasRole(UUID userId, UserRole role) {
+        return repositoryJpa.existsByIdAndRole(userId, role);
     }
 
     @Override
     public Optional<User> findById(UUID id) {
-        return repositoryJpa.findById(id).map(userMapper::toDomain);
+        return repositoryJpa.findById(id).map(mapper::toDomain);
     }
 
     @Override
-    public Optional<User> findByIdInactive(UUID id) {
-        return repositoryJpa.findByIdAndEnabledFalse(id).map(userMapper::toDomain);
+    public Optional<User> findByIdPendingActivation(UUID id) {
+        return repositoryJpa.findByIdAndEnabledFalse(id).map(mapper::toDomain);
+    }
+
+    @Override
+    public long count() {
+        return repositoryJpa.count();
     }
 }

@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class CourseAlreadyExistsException extends ApiException {
     public CourseAlreadyExistsException(String message) {
-        super(HttpStatus.CONFLICT, message);
+        super(HttpStatus.CONFLICT, "El curso: " + message + " ya existe");
     }
 }

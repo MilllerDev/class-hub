@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -18,4 +19,5 @@ public class Course {
     private String slug;
     private UUID userId;
     private boolean enabled;
+    private LocalDateTime createdAt;
 }

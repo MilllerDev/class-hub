@@ -2,14 +2,15 @@ package com.bailon.backend.users.infrastructure.mapper;
 
 import com.bailon.backend.users.domain.model.User;
 import com.bailon.backend.users.infrastructure.persistence.UserEntity;
+import com.bailon.backend.users.infrastructure.rest.response.UserResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface
 UserMapper {
     User toDomain(UserEntity entity);
 
-    @Mapping(target = "createdAt", ignore = true)
     UserEntity toEntity(User user);
+
+    UserResponse toDto(User user);
 }

@@ -12,4 +12,6 @@ public interface ProfileRepository {
     Optional<Profile> findByUser(UUID userId);
 
     List<Profile> findAll(UUID userId);
+
+    List<Profile> findLatest();
 }

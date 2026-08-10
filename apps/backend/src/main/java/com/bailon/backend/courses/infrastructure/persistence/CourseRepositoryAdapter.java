@@ -3,6 +3,7 @@ package com.bailon.backend.courses.infrastructure.persistence;
 import com.bailon.backend.courses.application.port.CourseRepository;
 import com.bailon.backend.courses.domain.model.Course;
 import com.bailon.backend.courses.infrastructure.mapper.CourseMapper;
+import com.bailon.backend.users.infrastructure.persistence.UserRepositoryJpa;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,16 +13,21 @@ import java.util.UUID;
 @Repository
 public class CourseRepositoryAdapter implements CourseRepository {
     private final CourseRepositoryJpa repositoryJpa;
+    private final UserRepositoryJpa userRepositoryJpa;
     private final CourseMapper mapper;
 
-    public CourseRepositoryAdapter(CourseRepositoryJpa repositoryJpa, CourseMapper mapper) {
+    public CourseRepositoryAdapter(CourseRepositoryJpa repositoryJpa, UserRepositoryJpa userRepositoryJpa, CourseMapper mapper) {
         this.repositoryJpa = repositoryJpa;
+        this.userRepositoryJpa = userRepositoryJpa;
         this.mapper = mapper;
     }
 
     @Override
     public Course save(Course course) {
         CourseEntity entity = mapper.toEntity(course);
+        if (course.getUserId() != null) {
+            entity.setUser(userRepositoryJpa.getReferenceById(course.getUserId()));
+        }
         return mapper.toDomain(repositoryJpa.save(entity));
     }
 
@@ -48,6 +54,16 @@ public class CourseRepositoryAdapter implements CourseRepository {
     @Override
     public List<Course> findAllOwnedBy(UUID userId) {
         return repositoryJpa.findByEnabledTrueAndUserId(userId).stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Course> findLatest() {
+        return repositoryJpa.findTop5ByOrderByCreatedAtDesc().stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public long count() {
+        return repositoryJpa.count();
     }
 
     @Override

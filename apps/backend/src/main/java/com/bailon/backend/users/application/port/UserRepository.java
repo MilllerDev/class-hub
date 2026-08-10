@@ -11,13 +11,15 @@ public interface UserRepository {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByEmailInactive(String email);
+    Optional<User> findByEmailPendingActivation(String email);
 
     boolean existsByEmail(String email);
 
-    boolean existsUser(UUID id, UserRole role);
+    boolean hasRole(UUID userId, UserRole role);
 
     Optional<User> findById(UUID id);
 
-    Optional<User> findByIdInactive(UUID id);
+    Optional<User> findByIdPendingActivation(UUID id);
+
+    long count();
 }
