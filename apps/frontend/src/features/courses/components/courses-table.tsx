@@ -1,9 +1,9 @@
 import { getCourses } from "@/features/courses/action";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { CourseTableRow } from "./course-table-row";
 
 export async function CoursesTable() {
-  const result = await getCourses();
-  const courses = result.success ? result.data : [];
+  const { courses } = await getCourses();
 
   if (courses.length === 0) {
     return (
@@ -24,6 +24,9 @@ export async function CoursesTable() {
               </th>
               <th className="hidden max-w-50 px-4 py-3 text-left font-medium text-muted-foreground sm:table-cell">
                 Descripción
+              </th>
+              <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground sm:table-cell">
+                Docente
               </th>
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                 Estado
@@ -56,6 +59,9 @@ export function CoursesTableSkeleton() {
             <th className="hidden max-w-50 px-4 py-3 text-left font-medium text-muted-foreground sm:table-cell">
               Descripción
             </th>
+            <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground sm:table-cell">
+              Docente
+            </th>
             <th className="px-4 py-3 text-left font-medium text-muted-foreground">
               Estado
             </th>
@@ -68,16 +74,23 @@ export function CoursesTableSkeleton() {
           {Array.from({ length: 5 }).map((_, i) => (
             <tr key={i} className="bg-card">
               <td className="px-4 py-3">
-                <div className="h-4 w-2/3 animate-pulse rounded bg-muted" />
+                <Skeleton className="h-4 w-2/3" />
               </td>
               <td className="hidden px-4 py-3 sm:table-cell">
-                <div className="h-4 w-1/2 animate-pulse rounded bg-muted" />
+                <Skeleton className="h-4 w-1/2" />
+              </td>
+              <td className="hidden px-4 py-3 sm:table-cell">
+                <Skeleton className="h-4 w-1/3" />
               </td>
               <td className="px-4 py-3">
-                <div className="h-5 w-16 animate-pulse rounded-full bg-muted" />
+                <Skeleton className="h-5 w-16 rounded-full" />
               </td>
               <td className="px-4 py-3">
-                <div className="ml-auto h-8 w-24 animate-pulse rounded-lg bg-muted" />
+                <div className="flex items-center justify-end gap-1">
+                  <Skeleton className="size-7 rounded-md" />
+                  <Skeleton className="size-7 rounded-md" />
+                  <Skeleton className="size-7 rounded-md" />
+                </div>
               </td>
             </tr>
           ))}

@@ -1,14 +1,6 @@
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { getProfiles } from "@/features/profiles/action";
 import { ProfileTableRow } from "./profile-table-row";
-
-const mockJoinedDates = [
-  "28 jul 2026",
-  "27 jul 2026",
-  "26 jul 2026",
-  "25 jul 2026",
-  "24 jul 2026",
-  "22 jul 2026",
-];
 
 export async function ProfilesTable() {
   const result = await getProfiles();
@@ -42,21 +34,14 @@ export async function ProfilesTable() {
             <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground md:table-cell">
               Registro
             </th>
+            <th className="px-4 py-3 text-right font-medium text-muted-foreground">
+              Acciones
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
-          {profiles.map((profile, i) => (
-            <ProfileTableRow
-              key={profile.id}
-              profile={
-                profile.joinedDate
-                  ? profile
-                  : {
-                      ...profile,
-                      joinedDate: mockJoinedDates[i % mockJoinedDates.length],
-                    }
-              }
-            />
+          {profiles.map((profile) => (
+            <ProfileTableRow key={profile.id} profile={profile} />
           ))}
         </tbody>
       </table>
@@ -85,6 +70,9 @@ export function ProfilesTableSkeleton() {
             <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground md:table-cell">
               Registro
             </th>
+            <th className="px-4 py-3 text-right font-medium text-muted-foreground">
+              Acciones
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -92,21 +80,26 @@ export function ProfilesTableSkeleton() {
             <tr key={i} className="bg-card">
               <td className="px-4 py-3">
                 <div className="flex items-center gap-3">
-                  <div className="size-8 animate-pulse rounded-full bg-muted" />
-                  <div className="h-4 w-2/3 animate-pulse rounded bg-muted" />
+                  <Skeleton className="size-8 rounded-full" />
+                  <Skeleton className="h-4 w-2/3" />
                 </div>
               </td>
               <td className="hidden px-4 py-3 sm:table-cell">
-                <div className="h-4 w-1/2 animate-pulse rounded bg-muted" />
+                <Skeleton className="h-4 w-1/2" />
               </td>
               <td className="px-4 py-3">
-                <div className="h-5 w-20 animate-pulse rounded-full bg-muted" />
+                <Skeleton className="h-5 w-20 rounded-full" />
               </td>
               <td className="px-4 py-3">
-                <div className="h-5 w-16 animate-pulse rounded-full bg-muted" />
+                <Skeleton className="h-4 w-8 rounded-full" />
               </td>
               <td className="hidden px-4 py-3 md:table-cell">
-                <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+                <Skeleton className="h-4 w-24" />
+              </td>
+              <td className="px-4 py-3">
+                <div className="flex items-center justify-end">
+                  <Skeleton className="size-7 rounded-md" />
+                </div>
               </td>
             </tr>
           ))}

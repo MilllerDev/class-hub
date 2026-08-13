@@ -3,8 +3,9 @@ export type Course = {
   name: string;
   description: string | null;
   slug: string;
-  userId: string | null;
   enabled: boolean;
+  createdAt: string;
+  userId: string | null;
 };
 
 export type CourseRequest = {

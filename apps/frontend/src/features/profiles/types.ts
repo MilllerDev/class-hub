@@ -6,6 +6,16 @@ export type Profile = {
   lastName: string;
   avatarUrl: string | null;
   user: User;
-  joinedDate?: string | null;
-  lastActive?: string | null;
+};
+
+export type ChangeStatusProps = {
+  userId: string;
+  enabled: boolean;
+  userName: string;
+};
+
+export type ChangeRoleProps = {
+  userId: string;
+  currentRole: string;
+  userName: string;
 };

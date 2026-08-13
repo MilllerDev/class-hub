@@ -1,8 +1,10 @@
 "use client";
 
 import { upsertCourse } from "@/features/courses/action";
+import { SelectTeacher } from "@/features/courses/components/select-teacher";
 import { courseSchema } from "@/features/courses/schemas";
-import type { Course, CourseRequest } from "@/features/courses/types";
+import type { CourseRequest } from "@/features/courses/types";
+import type { Course } from "@/graphql/types";
 import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
@@ -16,6 +18,7 @@ import {
 } from "@/shared/components/ui/dialog";
 import { Input } from "@/shared/components/ui/input";
 import { Switch } from "@/shared/components/ui/switch";
+import { Textarea } from "@/shared/components/ui/textarea";
 import { toast } from "@/shared/components/ui/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, Plus, Sparkles } from "lucide-react";
@@ -37,7 +40,7 @@ export function CourseFormDialog({ course }: { course?: Course }) {
     defaultValues: {
       name: course?.name,
       description: course?.description,
-      userId: course?.userId,
+      userId: course?.profile?.user?.id,
       useAi: false,
     },
   });
@@ -49,7 +52,6 @@ export function CourseFormDialog({ course }: { course?: Course }) {
       setOpen(false);
       reset();
     }
-    console.log(data);
     toast.add({ type: success ? "success" : "error", description: message });
   };
 
@@ -99,6 +101,21 @@ export function CourseFormDialog({ course }: { course?: Course }) {
               )}
             </div>
 
+            <div className="space-y-2">
+              <Controller
+                name="userId"
+                control={control}
+                render={({ field }) => (
+                  <SelectTeacher value={field.value} onChange={field.onChange} />
+                )}
+              />
+              {errors.userId && (
+                <p className="text-xs text-destructive">
+                  {errors.userId.message as string}
+                </p>
+              )}
+            </div>
+
             <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2.5">
               <div className="flex items-center gap-2">
                 <Sparkles className="size-4 text-muted-foreground" />
@@ -128,7 +145,7 @@ export function CourseFormDialog({ course }: { course?: Course }) {
               <label htmlFor="description" className="text-sm font-medium">
                 Descripción
               </label>
-              <Input
+              <Textarea
                 id="description"
                 disabled={useAi}
                 {...register("description")}
