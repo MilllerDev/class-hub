@@ -1,18 +1,26 @@
 "use server";
 
-import { getCoursesForAdmin, getCoursesForStudent as getCoursesForStudentQuery } from "@/graphql/queries/courses";
+import {
+  getCoursesForAdmin,
+  getCoursesForStudent as getCoursesForStudentQuery,
+} from "@/graphql/queries/courses";
 import { Course as CourseQl } from "@/graphql/types";
 import { api } from "@/lib/api";
 import { graphql } from "@/lib/graphql";
-import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 import { Course, CourseRequest } from "./types";
 
 async function getCourses() {
-  return await graphql.query<{ courses: CourseQl[] }>(getCoursesForAdmin);
+  return await graphql.query<{ courses: CourseQl[] }>(getCoursesForAdmin, {
+    next: { tags: ["courses"], revalidate: 3600 },
+  });
 }
 
 async function getCoursesForStudent() {
-  return await graphql.query<{ courses: CourseQl[] }>(getCoursesForStudentQuery);
+  return await graphql.query<{ courses: CourseQl[] }>(
+    getCoursesForStudentQuery,
+    { next: { tags: ["courses"], revalidate: 3600 } },
+  );
 }
 
 async function getCourse(idOrSlug: string) {
@@ -23,7 +31,7 @@ async function getCourse(idOrSlug: string) {
 async function createCourse(request: CourseRequest) {
   const res = await api.post<Course>("/courses", request);
   if (res.success) {
-    revalidatePath("/courses");
+    updateTag("courses");
   }
   return res;
 }
@@ -31,7 +39,7 @@ async function createCourse(request: CourseRequest) {
 async function updateCourse(id: string, request: CourseRequest) {
   const res = await api.patch<Course>(`/courses/${id}`, request);
   if (res.success) {
-    revalidatePath("/courses");
+    updateTag("courses");
   }
   return res;
 }
@@ -43,9 +51,14 @@ async function upsertCourse(request: CourseRequest, id?: string) {
 async function deleteCourse(id: string) {
   const res = await api.delete<Course>(`/courses/${id}`);
   if (res.success) {
-    revalidatePath("/courses");
+    updateTag("courses");
   }
   return res;
+}
+
+async function removeCourseTeacher(courseId: string) {
+  console.log("removeCourseTeacher", courseId);
+  return { success: true, message: "Docente eliminado del curso" };
 }
 
 export {
@@ -54,6 +67,7 @@ export {
   getCourse,
   getCourses,
   getCoursesForStudent,
+  removeCourseTeacher,
   updateCourse,
   upsertCourse
 };

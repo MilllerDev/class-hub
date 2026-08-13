@@ -1,3 +1,4 @@
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { getProfiles } from "@/features/profiles/action";
 import { ProfileTableRow } from "./profile-table-row";
 
@@ -79,26 +80,25 @@ export function ProfilesTableSkeleton() {
             <tr key={i} className="bg-card">
               <td className="px-4 py-3">
                 <div className="flex items-center gap-3">
-                  <div className="size-8 animate-pulse rounded-full bg-muted" />
-                  <div className="h-4 w-2/3 animate-pulse rounded bg-muted" />
+                  <Skeleton className="size-8 rounded-full" />
+                  <Skeleton className="h-4 w-2/3" />
                 </div>
               </td>
               <td className="hidden px-4 py-3 sm:table-cell">
-                <div className="h-4 w-1/2 animate-pulse rounded bg-muted" />
+                <Skeleton className="h-4 w-1/2" />
               </td>
               <td className="px-4 py-3">
-                <div className="h-5 w-20 animate-pulse rounded-full bg-muted" />
+                <Skeleton className="h-5 w-20 rounded-full" />
               </td>
               <td className="px-4 py-3">
-                <div className="h-5 w-16 animate-pulse rounded-full bg-muted" />
+                <Skeleton className="h-4 w-8 rounded-full" />
               </td>
               <td className="hidden px-4 py-3 md:table-cell">
-                <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+                <Skeleton className="h-4 w-24" />
               </td>
               <td className="px-4 py-3">
-                <div className="flex items-center justify-end gap-1">
-                  <div className="size-7 animate-pulse rounded-md bg-muted" />
-                  <div className="size-7 animate-pulse rounded-md bg-muted" />
+                <div className="flex items-center justify-end">
+                  <Skeleton className="size-7 rounded-md" />
                 </div>
               </td>
             </tr>

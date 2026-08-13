@@ -14,25 +14,22 @@ import {
 } from "@/shared/components/ui/alert-dialog";
 import { Button } from "@/shared/components/ui/button";
 import { toast } from "@/shared/components/ui/toast";
-import { Ban, TriangleAlert } from "lucide-react";
+import { TriangleAlert, UserRoundMinus } from "lucide-react";
 import { useState } from "react";
+import { removeCourseTeacher } from "../action";
 
-type DeactivateUserDialogProps = {
-  userName: string;
-  disabled?: boolean;
-};
-
-export function DeactivateUserDialog({
-  userName,
-  disabled,
-}: DeactivateUserDialogProps) {
+export function CourseRemoveTeacherDialog({
+  id,
+  teacherName,
+}: {
+  id: string;
+  teacherName: string;
+}) {
   const [open, setOpen] = useState(false);
 
-  function handleDeactivate() {
-    toast.add({
-      type: "success",
-      description: `Cuenta de ${userName} desactivada`,
-    });
+  async function handle() {
+    const { message } = await removeCourseTeacher(id);
+    toast.add({ description: message });
     setOpen(false);
   }
 
@@ -40,13 +37,8 @@ export function DeactivateUserDialog({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         render={
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            disabled={disabled}
-            aria-label={`Desactivar cuenta de ${userName}`}
-          >
-            <Ban className="size-4" />
+          <Button variant="ghost" size="icon-sm">
+            <UserRoundMinus className="size-4" />
           </Button>
         }
       />
@@ -55,16 +47,21 @@ export function DeactivateUserDialog({
           <AlertDialogMedia>
             <TriangleAlert className="size-6 text-destructive" />
           </AlertDialogMedia>
-          <AlertDialogTitle>Desactivar cuenta</AlertDialogTitle>
+          <AlertDialogTitle>Quitar docente</AlertDialogTitle>
           <AlertDialogDescription>
-            ¿Estás seguro de desactivar la cuenta de <strong>{userName}</strong>?
-            El usuario no podrá iniciar sesión hasta que sea reactivado.
+            ¿Estás seguro de quitar a <strong>{teacherName}</strong> del curso?
+            Esta acción no se puede deshacer.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction variant="destructive" onClick={handleDeactivate}>
-            Desactivar
+          <AlertDialogAction
+            variant="destructive"
+            onClick={async () => {
+              await handle();
+            }}
+          >
+            Quitar
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

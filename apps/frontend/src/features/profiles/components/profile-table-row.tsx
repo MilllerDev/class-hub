@@ -1,7 +1,9 @@
 import type { Profile } from "@/features/profiles/types";
+import { formatDate } from "@/lib/utils";
 import { User } from "lucide-react";
 import Image from "next/image";
-import { ProfileRowActions } from "./profile-row-actions";
+import { ProfileStatusSwitch } from "./profile-status-switch";
+import { RoleChangeDialog } from "./role-change-dialog";
 
 const roleLabels: Record<string, string> = {
   admin: "Administrador",
@@ -26,20 +28,6 @@ function RoleBadge({ role }: { role: string }) {
       className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${color}`}
     >
       {label}
-    </span>
-  );
-}
-
-function StatusBadge({ enabled }: { enabled: boolean }) {
-  return (
-    <span
-      className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
-        enabled
-          ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-          : "bg-muted text-muted-foreground"
-      }`}
-    >
-      {enabled ? "Activo" : "Inactivo"}
     </span>
   );
 }
@@ -69,23 +57,29 @@ export function ProfileTableRow({ profile }: { profile: Profile }) {
         </div>
       </td>
       <td className="hidden px-4 py-3 text-muted-foreground sm:table-cell">
-        {profile.user.email}
+        {user.email}
       </td>
       <td className="px-4 py-3">
         <RoleBadge role={user.role} />
       </td>
       <td className="px-4 py-3">
-        <StatusBadge enabled={user.enabled} />
-      </td>
-      <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
-        {profile.user.createdAt ?? "—"}
-      </td>
-      <td className="px-4 py-3">
-        <ProfileRowActions
-          role={user.role}
+        <ProfileStatusSwitch
+          userId={user.id}
           enabled={user.enabled}
           userName={fullName}
         />
+      </td>
+      <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
+        {formatDate(user.createdAt)}
+      </td>
+      <td className="px-4 py-3">
+        <div className="flex items-center justify-end">
+          <RoleChangeDialog
+            userId={user.id}
+            currentRole={user.role}
+            userName={fullName}
+          />
+        </div>
       </td>
     </tr>
   );

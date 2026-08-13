@@ -18,6 +18,7 @@ import {
 } from "@/shared/components/ui/dialog";
 import { Input } from "@/shared/components/ui/input";
 import { Switch } from "@/shared/components/ui/switch";
+import { Textarea } from "@/shared/components/ui/textarea";
 import { toast } from "@/shared/components/ui/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, Plus, Sparkles } from "lucide-react";
@@ -144,7 +145,7 @@ export function CourseFormDialog({ course }: { course?: Course }) {
               <label htmlFor="description" className="text-sm font-medium">
                 Descripción
               </label>
-              <Input
+              <Textarea
                 id="description"
                 disabled={useAi}
                 {...register("description")}

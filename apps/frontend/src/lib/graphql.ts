@@ -5,6 +5,7 @@ const BASE_URL = process.env.API_URL;
 
 async function gqlRequest<T>(
   query: string,
+  options: RequestInit = {},
   variables?: Record<string, unknown>,
 ): Promise<T> {
   const { accessToken } = await getServerTokens();
@@ -19,6 +20,7 @@ async function gqlRequest<T>(
     method: "POST",
     headers,
     body: JSON.stringify({ query, variables }),
+    ...options,
   });
 
   if (res.status === 401 || res.status === 403) {
@@ -35,7 +37,11 @@ async function gqlRequest<T>(
 }
 
 export const graphql = {
-  query<T>(query: string, variables?: Record<string, unknown>) {
-    return gqlRequest<T>(query, variables);
+  query<T>(
+    query: string,
+    options?: RequestInit,
+    variables?: Record<string, unknown>,
+  ) {
+    return gqlRequest<T>(query, options, variables);
   },
 };

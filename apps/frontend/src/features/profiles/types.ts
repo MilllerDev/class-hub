@@ -7,3 +7,15 @@ export type Profile = {
   avatarUrl: string | null;
   user: User;
 };
+
+export type ChangeStatusProps = {
+  userId: string;
+  enabled: boolean;
+  userName: string;
+};
+
+export type ChangeRoleProps = {
+  userId: string;
+  currentRole: string;
+  userName: string;
+};
