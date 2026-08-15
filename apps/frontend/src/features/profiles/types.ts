@@ -8,6 +8,12 @@ export type Profile = {
   user: User;
 };
 
+export type GetProfilesParams = {
+  q?: string;
+  page?: number;
+  size?: number;
+};
+
 export type ChangeStatusProps = {
   userId: string;
   enabled: boolean;

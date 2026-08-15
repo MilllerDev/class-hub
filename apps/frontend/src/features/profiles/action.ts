@@ -1,9 +1,10 @@
 "use server";
 
 import { api } from "@/lib/api";
+import { Page } from "@/shared/types/page";
 import { updateTag } from "next/cache";
 import { User } from "../auth/types";
-import { Profile } from "./types";
+import { GetProfilesParams, Profile } from "./types";
 
 async function getProfile() {
   return await api.get<Profile>("/profiles", {
@@ -11,10 +12,29 @@ async function getProfile() {
   });
 }
 
-async function getProfiles() {
-  return await api.get<Profile[]>("/profiles/list", {
-    next: { tags: ["list-users"], revalidate: 3600 },
+async function getProfiles({
+  page = 0,
+  size = 10,
+}: { page?: number; size?: number } = {}) {
+  const params = new URLSearchParams({
+    page: String(page),
+    size: String(size),
   });
+  return await api.get<Page<Profile>>(`/profiles/list?${params.toString()}`, {
+    next: { revalidate: 3600, tags: ["list-users"] },
+  });
+}
+async function searchProfiles({ q, page = 0, size = 10 }: GetProfilesParams) {
+  const params = new URLSearchParams({
+    q: q ?? "",
+    page: String(page),
+    size: String(size),
+  });
+  return await api.get<Page<Profile>>(`/profiles/list?${params.toString()}`);
+}
+
+async function listProfiles(page: number, q?: string) {
+  return q ? await searchProfiles({ q, page }) : await getProfiles({ page });
 }
 
 async function changeStatus(id: string, status: boolean) {
@@ -37,4 +57,4 @@ async function changeRole(id: string, role: string) {
   return { success, message };
 }
 
-export { changeRole, changeStatus, getProfile, getProfiles };
+export { changeRole, changeStatus, getProfile, listProfiles };

@@ -67,7 +67,14 @@ export function RoleChangeDialog(props: ChangeRoleProps) {
 
   const onSubmit: SubmitHandler<ChangeRoleFields> = async (data) => {
     const { success, message } = await changeRole(userId, data.role);
-    toast.add({ type: success ? "success" : "error", description: message });
+    if (success) {
+      setOpen(false);
+      setConfirmOpen(false);
+    }
+    toast.add({
+      type: success ? "success" : "error",
+      description: success ? `Rol cambiado a: ${roleLabel}` : message,
+    });
   };
 
   function handleOpenChange(isOpen: boolean) {

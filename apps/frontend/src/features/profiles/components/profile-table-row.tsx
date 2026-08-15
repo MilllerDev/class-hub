@@ -78,6 +78,7 @@ export function ProfileTableRow({ profile }: { profile: Profile }) {
             userId={user.id}
             currentRole={user.role}
             userName={fullName}
+            key={user.role}
           />
         </div>
       </td>
