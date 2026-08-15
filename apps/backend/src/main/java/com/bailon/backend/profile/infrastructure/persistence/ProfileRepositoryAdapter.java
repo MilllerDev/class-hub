@@ -4,8 +4,11 @@ import com.bailon.backend.profile.application.port.ProfileRepository;
 import com.bailon.backend.profile.domain.model.Profile;
 import com.bailon.backend.profile.infrastructure.mapper.ProfileMapper;
 import org.springframework.data.domain.Limit;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,8 +34,13 @@ public class ProfileRepositoryAdapter implements ProfileRepository {
     }
 
     @Override
-    public List<Profile> findAll(UUID userId) {
-        return repositoryJpa.findByUserIdNot(userId).stream().map(mapper::toDomain).toList();
+    public List<Profile> findByUserIds(Collection<UUID> userIds) {
+        return repositoryJpa.findByUserIdIn(userIds).stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public Page<Profile> search(UUID userId, String query, Pageable pageable) {
+        return repositoryJpa.search(userId, query, pageable).map(mapper::toDomain);
     }
 
     @Override

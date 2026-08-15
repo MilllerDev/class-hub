@@ -23,6 +23,12 @@ public interface CourseRepositoryJpa extends JpaRepository<CourseEntity, UUID> {
 
     boolean existsBySlug(String slug);
 
+    boolean existsBySlugAndEnabled(String slug, boolean enabled);
+
+    boolean existsBySlugAndUserId(String slug, UUID userId);
+
+    boolean existsByIdAndUserId(UUID id, UUID userId);
+
     @Query("""
             SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM CourseEntity c
             WHERE (c.name = :name OR c.slug = :slug) AND c.id <> :id

@@ -82,6 +82,21 @@ public class CourseRepositoryAdapter implements CourseRepository {
     }
 
     @Override
+    public boolean existsEnabledBySlug(String slug) {
+        return repositoryJpa.existsBySlugAndEnabled(slug, true);
+    }
+
+    @Override
+    public boolean teacherOwnsCourse(UUID courseId, UUID teacherId) {
+        return repositoryJpa.existsByIdAndUserId(courseId, teacherId);
+    }
+
+    @Override
+    public boolean teacherOwnsCourse(String slug, UUID teacherId) {
+        return repositoryJpa.existsBySlugAndUserId(slug, teacherId);
+    }
+
+    @Override
     public boolean exists(UUID id) {
         return repositoryJpa.existsById(id);
     }

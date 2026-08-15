@@ -29,6 +29,12 @@ public interface CourseRepository {
 
     boolean existsBySlug(String slug);
 
+    boolean existsEnabledBySlug(String slug);
+
+    boolean teacherOwnsCourse(UUID courseId, UUID teacherId);
+
+    boolean teacherOwnsCourse(String slug, UUID teacherId);
+
     boolean exists(UUID id);
 
     void delete(UUID id);
