@@ -1,12 +1,13 @@
 package com.bailon.backend.profile.infrastructure.rest;
 
 import com.bailon.backend.config.ApiResponse;
+import com.bailon.backend.config.PageResponse;
 import com.bailon.backend.profile.application.usecase.GetProfileUseCase;
 import com.bailon.backend.profile.application.usecase.GetProfilesUseCase;
 import com.bailon.backend.profile.domain.model.Profile;
 import com.bailon.backend.profile.infrastructure.mapper.ProfileMapper;
-import com.bailon.backend.config.PageResponse;
 import com.bailon.backend.profile.infrastructure.rest.response.ProfileResponse;
+import com.bailon.backend.users.domain.model.UserRole;
 import com.bailon.backend.users.infrastructure.security.AppUserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/profiles")
@@ -39,11 +42,24 @@ public class ProfileController {
     public ResponseEntity<ApiResponse<PageResponse<ProfileResponse>>> getProfiles(
             @AuthenticationPrincipal AppUserPrincipal auth,
             @RequestParam(required = false) String q,
+            @RequestParam(required = false) UserRole role,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<Profile> profiles = getProfiles.list(auth.user().getId(), q, PageRequest.of(page, size));
+        Page<Profile> profiles = getProfiles.page(auth.user().getId(), q, role, PageRequest.of(page, size));
         PageResponse<ProfileResponse> response = PageResponse.of(profiles.map(mapper::toDto));
         return ResponseEntity.ok(ApiResponse.success("Listado de usuarios", response));
+    }
+
+    @GetMapping("/role")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ApiResponse<List<ProfileResponse>>> getProfilesByRole(
+            @AuthenticationPrincipal AppUserPrincipal auth,
+            @RequestParam(required = false) UserRole role
+    ) {
+        List<Profile> profiles = getProfiles.list(auth.user().getId(), role);
+        return ResponseEntity.ok(
+                ApiResponse.success("Listado de usuarios", profiles.stream().map(mapper::toDto).toList())
+        );
     }
 }

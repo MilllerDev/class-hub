@@ -5,10 +5,12 @@ import com.bailon.backend.profile.application.usecase.GetProfileUseCase;
 import com.bailon.backend.profile.application.usecase.GetProfilesUseCase;
 import com.bailon.backend.profile.domain.exception.ProfileNotFoundException;
 import com.bailon.backend.profile.domain.model.Profile;
+import com.bailon.backend.users.domain.model.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,11 +27,12 @@ public class GetProfileService implements GetProfileUseCase, GetProfilesUseCase 
     }
 
     @Override
-    public Page<Profile> list(UUID userId, String query, Pageable pageable) {
-        String normalized = query == null ? "" : query.trim().toLowerCase();
-        if (normalized.isEmpty()) {
-            return Page.empty(pageable);
-        }
-        return repository.search(userId, normalized, pageable);
+    public Page<Profile> page(UUID userId, String query, UserRole role, Pageable pageable) {
+        return repository.search(userId, query, role, pageable);
+    }
+
+    @Override
+    public List<Profile> list(UUID userId, UserRole role) {
+        return repository.profilesByRole(role, userId);
     }
 }

@@ -1,6 +1,7 @@
 package com.bailon.backend.profile.application.port;
 
 import com.bailon.backend.profile.domain.model.Profile;
+import com.bailon.backend.users.domain.model.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,7 +17,9 @@ public interface ProfileRepository {
 
     List<Profile> findByUserIds(Collection<UUID> userIds);
 
-    Page<Profile> search(UUID userId, String query, Pageable pageable);
+    List<Profile> profilesByRole(UserRole role, UUID userId);
+
+    Page<Profile> search(UUID userId, String query, UserRole role, Pageable pageable);
 
     List<Profile> findLatest();
 }
