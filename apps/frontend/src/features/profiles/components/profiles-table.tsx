@@ -1,50 +1,73 @@
+import { PageSizeSelect } from "@/shared/components/ui/page-size-select";
+import { Pagination } from "@/shared/components/ui/pagination";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { getProfiles } from "@/features/profiles/action";
+import { listProfiles } from "../action";
+import { ProfileParams } from "../types";
 import { ProfileTableRow } from "./profile-table-row";
 
-export async function ProfilesTable() {
-  const result = await getProfiles();
-  const profiles = result.success ? result.data : [];
+export async function ProfilesTable({ q, page, role, size }: ProfileParams) {
+  const { data: profiles } = await listProfiles({ q, page, role, size });
+  const currentPage = profiles.page;
+  const totalPages = profiles.totalPages;
 
-  if (profiles.length === 0) {
+  if (profiles.content.length === 0) {
     return (
       <div className="rounded-xl border border-border bg-card p-8 text-center text-sm text-muted-foreground">
-        No hay datos que mostrar
+        {q ? (
+          <>
+            No se encontraron resultados para{" "}
+            <span className="font-medium text-card-foreground">«{q}»</span>
+          </>
+        ) : (
+          "No hay datos que mostrar"
+        )}
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="bg-muted/50">
-            <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-              Nombre
-            </th>
-            <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground sm:table-cell">
-              Email
-            </th>
-            <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-              Rol
-            </th>
-            <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-              Estado
-            </th>
-            <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground md:table-cell">
-              Registro
-            </th>
-            <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-              Acciones
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border">
-          {profiles.map((profile) => (
-            <ProfileTableRow key={profile.id} profile={profile} />
-          ))}
-        </tbody>
-      </table>
+    <div className="space-y-3">
+      <div className="overflow-hidden rounded-xl border border-border">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-muted/50">
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Nombre
+              </th>
+              <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground sm:table-cell">
+                Email
+              </th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Rol
+              </th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Estado
+              </th>
+              <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground md:table-cell">
+                Registro
+              </th>
+              <th className="px-4 py-3 text-right font-medium text-muted-foreground">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {profiles.content.map((profile) => (
+              <ProfileTableRow key={profile.id} profile={profile} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {profiles && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          last={profiles.last}
+        >
+          <PageSizeSelect />
+        </Pagination>
+      )}
     </div>
   );
 }

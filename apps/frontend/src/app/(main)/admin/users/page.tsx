@@ -4,10 +4,25 @@ import {
   ProfilesTable,
   ProfilesTableSkeleton,
 } from "@/features/profiles/components/profiles-table";
+import { ProfileParams } from "@/features/profiles/types";
+import { FilterTabs } from "@/shared/components/ui/filter-tabs";
+import { Search } from "@/shared/components/ui/search";
 
-const tabs = ["Todos", "Estudiantes", "Docentes"];
+const tabs = [
+  { label: "Todos", value: "" },
+  { label: "Estudiantes", value: "STUDENT" },
+  { label: "Docentes", value: "TEACHER" },
+  { label: "Administradores", value: "ADMIN" },
+];
 
-export default function AdminUsersPage() {
+export default async function AdminUsersPage({
+  searchParams,
+}: {
+  searchParams: Promise<ProfileParams>;
+}) {
+  const { q, page, role, size } = await searchParams;
+  const currentPage = Math.floor(Math.max(1, Number(page) || 1));
+
   return (
     <div className="mx-auto w-full max-w-5xl space-y-6 px-4 py-8">
       <section>
@@ -19,19 +34,18 @@ export default function AdminUsersPage() {
         </p>
       </section>
 
-      <div className="flex items-center gap-2">
-        {tabs.map((tab) => (
-          <span
-            key={tab}
-            className="inline-block cursor-default rounded-full border border-border px-3 py-1 text-xs font-medium text-muted-foreground transition-colors first:bg-primary first:text-primary-foreground first:border-primary"
-          >
-            {tab}
-          </span>
-        ))}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <FilterTabs items={tabs} param="role" />
+        </div>
+        <Search holder="Buscar por nombre, apellido o correo..." />
       </div>
 
-      <Suspense fallback={<ProfilesTableSkeleton />}>
-        <ProfilesTable />
+      <Suspense
+        key={`${q ?? ""}-${currentPage}-${role ?? ""}-${size}`}
+        fallback={<ProfilesTableSkeleton />}
+      >
+        <ProfilesTable q={q} page={currentPage} role={role} size={size} />
       </Suspense>
     </div>
   );
