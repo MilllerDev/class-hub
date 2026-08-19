@@ -20,4 +20,8 @@ public class Course {
     private UUID userId;
     private boolean enabled;
     private LocalDateTime createdAt;
+
+    public boolean belongsTo(UUID userId) {
+        return this.userId.equals(userId);
+    }
 }
