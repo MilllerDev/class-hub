@@ -1,6 +1,6 @@
 "use client";
 
-import { listProfiles } from "@/features/profiles/action";
+import { getProfileByRole } from "@/features/profiles/action";
 import { useFetch } from "@/hooks/use-fetch";
 import {
   Select,
@@ -16,10 +16,8 @@ type SelectTeacherProps = {
 };
 
 export function SelectTeacher({ value, onChange }: SelectTeacherProps) {
-  const { data, loading, error } = useFetch(getProfiles);
-  const profiles = (data?.success ? data.data.content : []).filter(
-    (profile) => profile.user.role.toLowerCase() === "teacher",
-  );
+  const { data, loading, error } = useFetch(() => getProfileByRole("TEACHER"));
+  const profiles = data ? data.data : [];
 
   return (
     <div className="space-y-2">

@@ -6,22 +6,30 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { PaginationProps } from "../types";
 import { Button } from "./button";
 
-export function Pagination(props: PaginationProps) {
-  const { currentPage, totalPages, last } = props;
+export function Pagination({
+  currentPage,
+  totalPages,
+  last,
+  children,
+}: PaginationProps & { children?: React.ReactNode }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   const handlePage = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("page", String(page));
+    params.set("page", String(page + 1));
+    if (page === 0) params.delete("page");
     return `${pathname}?${params.toString()}`;
   };
 
   return (
     <div className="flex items-center justify-between">
-      <p className="text-xs text-muted-foreground">
-        Página {currentPage + 1} de {totalPages}
-      </p>
+      <div className="flex items-center gap-3">
+        {children}
+        <p className="text-xs text-muted-foreground">
+          Página {currentPage + 1} de {totalPages}
+        </p>
+      </div>
       <div className="flex items-center gap-1.5">
         <Button variant={"outline"} size={"sm"} disabled={currentPage === 0}>
           <Link

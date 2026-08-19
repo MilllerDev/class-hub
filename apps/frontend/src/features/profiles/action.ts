@@ -4,7 +4,7 @@ import { api } from "@/lib/api";
 import { Page } from "@/shared/types/page";
 import { updateTag } from "next/cache";
 import { User } from "../auth/types";
-import { GetProfilesParams, Profile } from "./types";
+import { Profile, ProfileParams } from "./types";
 
 async function getProfile() {
   return await api.get<Profile>("/profiles", {
@@ -12,29 +12,37 @@ async function getProfile() {
   });
 }
 
-async function getProfiles({
-  page = 0,
-  size = 10,
-}: { page?: number; size?: number } = {}) {
+async function getProfileByRole(role?: string) {
+  return await api.get<Profile[]>(`/profiles/role?role=${role}`, {
+    next: { revalidate: 3600, tags: [`${role}-profiles`] },
+  });
+}
+
+async function getProfiles({ page = 1, size = 10 }: ProfileParams) {
+  const currentSize = size > 4 ? size : 10;
   const params = new URLSearchParams({
-    page: String(page),
-    size: String(size),
+    page: String(Math.max(0, page - 1)),
+    size: String(currentSize),
   });
   return await api.get<Page<Profile>>(`/profiles/list?${params.toString()}`, {
     next: { revalidate: 3600, tags: ["list-users"] },
   });
 }
-async function searchProfiles({ q, page = 0, size = 10 }: GetProfilesParams) {
+async function searchProfiles({ q, role, page = 1, size = 10 }: ProfileParams) {
+  const currentSize = size > 4 ? size : 10;
   const params = new URLSearchParams({
-    q: q ?? "",
-    page: String(page),
-    size: String(size),
+    page: String(Math.max(0, page - 1)),
+    size: String(currentSize),
   });
+  if (q) params.set("q", q);
+  if (role) params.set("role", role);
   return await api.get<Page<Profile>>(`/profiles/list?${params.toString()}`);
 }
 
-async function listProfiles(page: number, q?: string) {
-  return q ? await searchProfiles({ q, page }) : await getProfiles({ page });
+async function listProfiles({ q, page, role, size }: ProfileParams) {
+  return q || role
+    ? await searchProfiles({ q, role, page, size })
+    : await getProfiles({ page, size });
 }
 
 async function changeStatus(id: string, status: boolean) {
@@ -57,4 +65,5 @@ async function changeRole(id: string, role: string) {
   return { success, message };
 }
 
-export { changeRole, changeStatus, getProfile, listProfiles };
+export { changeRole, changeStatus, getProfile, getProfileByRole, listProfiles };
+

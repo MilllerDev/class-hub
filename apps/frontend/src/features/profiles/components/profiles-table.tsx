@@ -1,12 +1,14 @@
+import { PageSizeSelect } from "@/shared/components/ui/page-size-select";
 import { Pagination } from "@/shared/components/ui/pagination";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { listProfiles } from "../action";
+import { ProfileParams } from "../types";
 import { ProfileTableRow } from "./profile-table-row";
 
-export async function ProfilesTable({ q, page }: { q?: string; page: number }) {
-  const { data: profiles } = await listProfiles(page, q);
-  const currentPage = profiles.page ?? 0;
-  const totalPages = profiles.totalPages ?? 0;
+export async function ProfilesTable({ q, page, role, size }: ProfileParams) {
+  const { data: profiles } = await listProfiles({ q, page, role, size });
+  const currentPage = profiles.page;
+  const totalPages = profiles.totalPages;
 
   if (profiles.content.length === 0) {
     return (
@@ -58,7 +60,13 @@ export async function ProfilesTable({ q, page }: { q?: string; page: number }) {
       </div>
 
       {profiles && (
-        <Pagination currentPage={currentPage} totalPages={totalPages} last />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          last={profiles.last}
+        >
+          <PageSizeSelect />
+        </Pagination>
       )}
     </div>
   );

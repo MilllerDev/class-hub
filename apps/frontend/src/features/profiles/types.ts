@@ -8,8 +8,9 @@ export type Profile = {
   user: User;
 };
 
-export type GetProfilesParams = {
+export type ProfileParams = {
   q?: string;
+  role?: string;
   page?: number;
   size?: number;
 };
