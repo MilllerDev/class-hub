@@ -3,6 +3,7 @@
 import {
   getCoursesForAdmin,
   getCoursesForStudent as getCoursesForStudentQuery,
+  getCoursesForTeacher as getCoursesForTeacherQuery,
 } from "@/graphql/queries/courses";
 import { Course as CourseQl } from "@/graphql/types";
 import { api } from "@/lib/api";
@@ -23,8 +24,17 @@ async function getCoursesForStudent() {
   );
 }
 
+async function getCoursesForTeacher() {
+  return await graphql.query<{ courses: CourseQl[] }>(
+    getCoursesForTeacherQuery,
+    { next: { tags: ["courses"], revalidate: 3600 } },
+  );
+}
+
 async function getCourse(idOrSlug: string) {
-  const res = await api.get<Course>(`/courses/${idOrSlug}`);
+  const res = await api.get<Course>(`/courses/${idOrSlug}`, {
+    next: { revalidate: 3600, tags: [`course-${idOrSlug}`] },
+  });
   return res;
 }
 
@@ -67,6 +77,7 @@ export {
   getCourse,
   getCourses,
   getCoursesForStudent,
+  getCoursesForTeacher,
   removeCourseTeacher,
   updateCourse,
   upsertCourse
