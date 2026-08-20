@@ -31,11 +31,20 @@ const modules = {
       { href: "/profile", label: "Mi perfil", icon: User },
     ],
   },
+  teacher: {
+    headerLabel: "Docente",
+    items: [
+      { href: "/teacher", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/teacher/courses", label: "Mis Cursos", icon: BookOpen },
+      { href: "/profile", label: "Mi perfil", icon: User },
+    ],
+  },
 } as const;
 
 function getModule(role: string) {
   if (role === "admin") return modules.admin;
   if (role === "student") return modules.student;
+  if (role === "teacher") return modules.teacher;
 }
 
 export function NavLinkSidebar({ role }: { role: string }) {

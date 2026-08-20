@@ -26,7 +26,7 @@ export async function CourseList() {
       {courses.map((course) => (
         <Link
           key={course.id}
-          href={`/student/courses/${course.id}`}
+          href={`/student/courses/${course.slug}`}
           className="group flex flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:bg-accent"
         >
           <div className="flex items-start justify-between">
@@ -60,10 +60,7 @@ export function CourseListSkeleton() {
   return (
     <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="rounded-xl border border-border bg-card p-5"
-        >
+        <div key={i} className="rounded-xl border border-border bg-card p-5">
           <div className="flex items-start justify-between">
             <Skeleton className="size-10 rounded-lg" />
             <Skeleton className="h-5 w-16 rounded-full" />

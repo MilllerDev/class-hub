@@ -1,4 +1,5 @@
 import type { Course } from "@/graphql/types";
+import Link from "next/link";
 import { CourseDeleteDialog } from "./course-delete-dialog";
 import { CourseFormDialog } from "./course-form-dialog";
 import { CourseRemoveTeacherDialog } from "./course-remove-teacher-dialog";
@@ -12,7 +13,12 @@ export function CourseTableRow({ course }: { course: Course }) {
   return (
     <tr className="bg-card transition-colors hover:bg-muted/30">
       <td className="px-4 py-3 font-medium text-card-foreground">
-        {course.name}
+        <Link
+          href={`/admin/courses/${course.slug}`}
+          className="transition-colors hover:text-primary hover:underline"
+        >
+          {course.name}
+        </Link>
       </td>
       <td className="hidden max-w-50 truncate px-4 py-3 text-muted-foreground sm:table-cell">
         {course.description?.trim() ? course.description : "Sin descripción"}
