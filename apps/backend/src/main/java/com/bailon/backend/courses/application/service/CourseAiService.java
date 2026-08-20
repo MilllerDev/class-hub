@@ -28,13 +28,12 @@ public class CourseAiService implements CourseAiPort {
 
     @Async("aiService")
     @Override
-    public void genereteDetails(Course course, String name) {
+    public void generateDetails(Course course) {
         String description = chatClient.prompt().user(u -> u
                 .text(PROMPT_TEMPLATE)
-                .param("name", name)
+                .param("name", course.getName())
                 .param("description", course.getDescription())
         ).call().content();
-        course.setDescription(description);
-        repository.save(course);
+        repository.updateDescription(course.getId(), description);
     }
 }

@@ -5,6 +5,7 @@ import com.bailon.backend.courses.domain.model.Course;
 import com.bailon.backend.courses.infrastructure.mapper.CourseMapper;
 import com.bailon.backend.users.infrastructure.persistence.UserRepositoryJpa;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,17 +33,22 @@ public class CourseRepositoryAdapter implements CourseRepository {
     }
 
     @Override
-    public Optional<Course> findBySlug(String slug, boolean enabled) {
-        return repositoryJpa.findBySlugAndEnabled(slug, enabled).map(mapper::toDomain);
-    }
-
-    @Override
     public Optional<Course> findById(UUID id) {
         return repositoryJpa.findById(id).map(mapper::toDomain);
     }
 
     @Override
-    public List<Course> findAllActive() {
+    public Optional<Course> findBySlug(String slug) {
+        return repositoryJpa.findBySlug(slug).map(mapper::toDomain);
+    }
+
+    @Override
+    public Optional<Course> findEnabledBySlug(String slug) {
+        return repositoryJpa.findBySlugAndEnabledTrue(slug).map(mapper::toDomain);
+    }
+
+    @Override
+    public List<Course> findAllEnabled() {
         return repositoryJpa.findByEnabledTrue().stream().map(mapper::toDomain).toList();
     }
 
@@ -52,8 +58,8 @@ public class CourseRepositoryAdapter implements CourseRepository {
     }
 
     @Override
-    public List<Course> findAllOwnedBy(UUID userId) {
-        return repositoryJpa.findByEnabledTrueAndUserId(userId).stream().map(mapper::toDomain).toList();
+    public List<Course> findAllByOwner(UUID ownerId) {
+        return repositoryJpa.findByUserId(ownerId).stream().map(mapper::toDomain).toList();
     }
 
     @Override
@@ -67,23 +73,18 @@ public class CourseRepositoryAdapter implements CourseRepository {
     }
 
     @Override
-    public boolean alreadyExists(String name, String slug) {
-        return repositoryJpa.existsByNameAndSlug(name, slug);
+    public boolean existsByNameOrSlug(String name, String slug) {
+        return repositoryJpa.existsByNameOrSlug(name, slug);
     }
 
     @Override
-    public boolean alreadyExists(String name, String slug, UUID id) {
-        return repositoryJpa.existsByNameOrSlugAndIdNot(name, slug, id);
+    public boolean existsByNameOrSlug(String name, String slug, UUID excludedId) {
+        return repositoryJpa.existsByNameOrSlugAndIdNot(name, slug, excludedId);
     }
 
     @Override
-    public boolean existsBySlug(String slug) {
-        return repositoryJpa.existsBySlug(slug);
-    }
-
-    @Override
-    public boolean existsEnabledBySlug(String slug) {
-        return repositoryJpa.existsBySlugAndEnabled(slug, true);
+    public boolean existsById(UUID id) {
+        return repositoryJpa.existsById(id);
     }
 
     @Override
@@ -92,13 +93,9 @@ public class CourseRepositoryAdapter implements CourseRepository {
     }
 
     @Override
-    public boolean teacherOwnsCourse(String slug, UUID teacherId) {
-        return repositoryJpa.existsBySlugAndUserId(slug, teacherId);
-    }
-
-    @Override
-    public boolean exists(UUID id) {
-        return repositoryJpa.existsById(id);
+    @Transactional
+    public void updateDescription(UUID id, String description) {
+        repositoryJpa.updateDescription(id, description);
     }
 
     @Override

@@ -17,7 +17,7 @@ public class DeleteCourseService implements DeleteCourseUseCase {
 
     @Override
     public void execute(UUID id) {
-        if (!courseRepository.exists(id)) {
+        if (!courseRepository.existsById(id)) {
             throw new CourseNotFoundException("No se encontró el curso");
         }
         courseRepository.delete(id);
