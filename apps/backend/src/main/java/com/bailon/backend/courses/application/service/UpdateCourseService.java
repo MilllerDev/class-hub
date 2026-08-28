@@ -38,16 +38,17 @@ public class UpdateCourseService implements UpdateCourseUseCase {
         }
         if (course.getName() != null && !course.getName().equals(found.getName())) {
             String newSlug = Utils.generateSlug(course.getName());
-            if (courseRepository.alreadyExists(course.getName(), newSlug, id)) {
+            if (courseRepository.existsByNameOrSlug(course.getName(), newSlug, id)) {
                 throw new CourseAlreadyExistsException(course.getName());
             }
             found.setSlug(newSlug);
         }
-        if (useAi) {
-            courseAiPort.genereteDetails(found, found.getName());
-        }
         mapper.toDomain(course, found);
         found.setEnabled(found.getUserId() != null);
-        return courseRepository.save(found);
+        Course updated = courseRepository.save(found);
+        if (useAi) {
+            courseAiPort.generateDetails(updated);
+        }
+        return updated;
     }
 }

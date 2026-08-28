@@ -33,13 +33,13 @@ public class CreateCourseService implements CreateCourseUseCase {
             }
         }
         course.setSlug(Utils.generateSlug(course.getName()));
-        if (courseRepository.alreadyExists(course.getName(), course.getSlug())) {
+        if (courseRepository.existsByNameOrSlug(course.getName(), course.getSlug())) {
             throw new CourseAlreadyExistsException(course.getName());
         }
         course.setEnabled(course.getUserId() != null);
         Course saved = courseRepository.save(course);
         if (useAi) {
-            aiPort.genereteDetails(saved, course.getName());
+            aiPort.generateDetails(saved);
         }
         return saved;
     }

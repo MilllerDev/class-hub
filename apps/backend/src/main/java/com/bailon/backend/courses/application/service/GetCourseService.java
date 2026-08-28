@@ -18,11 +18,11 @@ public class GetCourseService implements GetCourseUseCase {
     @Override
     public Course execute(String slug, UserRole role) {
         if (role != UserRole.ADMIN) {
-            return courseRepository.findBySlug(slug, true).orElseThrow(
+            return courseRepository.findEnabledBySlug(slug).orElseThrow(
                     () -> new CourseNotFoundException("No se encontró el curso o no tienes acceso.")
             );
         }
-        return courseRepository.findBySlug(slug, false).orElseThrow(
+        return courseRepository.findBySlug(slug).orElseThrow(
                 () -> new CourseNotFoundException("No se encontró el curso.")
         );
     }

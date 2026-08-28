@@ -21,8 +21,8 @@ public class GetAllCoursesService implements GetAllCoursesUseCase {
     public List<Course> execute(UserRole role, UUID userId) {
         return switch (role) {
             case ADMIN -> courseRepository.findAll();
-            case TEACHER -> courseRepository.findAllOwnedBy(userId);
-            default -> courseRepository.findAllActive();
+            case TEACHER -> courseRepository.findAllByOwner(userId);
+            default -> courseRepository.findAllEnabled();
         };
     }
 }

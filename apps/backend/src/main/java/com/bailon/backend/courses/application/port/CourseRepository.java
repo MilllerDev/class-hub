@@ -9,33 +9,31 @@ import java.util.UUID;
 public interface CourseRepository {
     Course save(Course course);
 
-    Optional<Course> findBySlug(String slug, boolean enabled);
-
     Optional<Course> findById(UUID id);
 
-    List<Course> findAllActive();
+    Optional<Course> findBySlug(String slug);
+
+    Optional<Course> findEnabledBySlug(String slug);
+
+    List<Course> findAllEnabled();
 
     List<Course> findAll();
 
-    List<Course> findAllOwnedBy(UUID userId);
+    List<Course> findAllByOwner(UUID ownerId);
 
     List<Course> findLatest();
 
     long count();
 
-    boolean alreadyExists(String name, String slug);
+    boolean existsByNameOrSlug(String name, String slug);
 
-    boolean alreadyExists(String name, String slug, UUID id);
+    boolean existsByNameOrSlug(String name, String slug, UUID excludedId);
 
-    boolean existsBySlug(String slug);
-
-    boolean existsEnabledBySlug(String slug);
+    boolean existsById(UUID id);
 
     boolean teacherOwnsCourse(UUID courseId, UUID teacherId);
 
-    boolean teacherOwnsCourse(String slug, UUID teacherId);
-
-    boolean exists(UUID id);
+    void updateDescription(UUID id, String description);
 
     void delete(UUID id);
 }
