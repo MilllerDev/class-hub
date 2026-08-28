@@ -62,6 +62,16 @@ docker compose -f infrastructure/docker/compose.yml up --build
 
 > Instrucciones detalladas por aplicación: [`docs/backend.md`](docs/backend.md) y [`docs/frontend.md`](docs/frontend.md).
 
+## Usuarios de prueba
+
+| Rol | Email | Contraseña |
+|---|---|---|
+| **STUDENT** | `alvarezsalasangelica8@gmail.com` | `miller_1234` |
+| **TEACHER** | `docente@gmail.com` | `miller_1234` |
+| **ADMIN** | `admin@gmail.com` | `miller_1234` |
+
+> Todos los usuarios comparten la misma contraseña `miller_1234`. Se puede acceder  con estos usuarios en: class-hub-seven.vercel.app porque las cuentas ya estén activadas (recuerda que la activación por correo está bloqueada en Render, ver sección siguiente).
+
 ## Puntos pendientes / a implementar
 
 ### Inicio de sesión con Google (no implementado)
@@ -69,9 +79,7 @@ docker compose -f infrastructure/docker/compose.yml up --build
 La interfaz muestra el botón **"Continuar con Google"** en el login y el registro, pero **es puramente decorativo**:
 
 - No tiene manejador de click, ni redirección OAuth, ni endpoint.
-- No existe dependencia de OAuth (ni `next-auth`, ni `google-auth-library`).
 - No hay variables de entorno de OAuth (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`), ni en backend ni en frontend.
-- El backend no expone ningún flujo de login social.
 
 El único uso de "Google" en el proyecto es `Google GenAI` (Gemini) para la IA, no OAuth.
 
