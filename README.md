@@ -18,6 +18,16 @@ Este es un **monorepo** dividido en tres áreas:
 - **TEACHER** — crea/edita/elimina temas y recursos de sus propios cursos.
 - **ADMIN** — gestiona usuarios (roles y estados), cursos y el dashboard.
 
+## Usuarios de prueba
+
+| Rol | Email | Contraseña |
+|---|---|---|
+| **STUDENT** | `alvarezsalasangelica8@gmail.com` | `miller_1234` |
+| **TEACHER** | `docente@gmail.com` | `miller_1234` |
+| **ADMIN** | `admin@gmail.com` | `miller_1234` |
+
+> Todos los usuarios comparten la misma contraseña. Se puede acceder con estos usuarios en la web desplegada porque las cuentas ya estén activadas (recuerda función de la activación por correo está inhabilitada porque Render bloquea los puertos 587, 465 ).
+
 ### Características principales
 
 - Registro, login y **activación de cuenta por correo** (JWT + tokens temporales).
@@ -61,16 +71,6 @@ docker compose -f infrastructure/docker/compose.yml up --build
    Abrir `http://localhost:3000`. El frontend se conecta al backend mediante la variable `API_URL` (ver `docs/frontend.md`).
 
 > Instrucciones detalladas por aplicación: [`docs/backend.md`](docs/backend.md) y [`docs/frontend.md`](docs/frontend.md).
-
-## Usuarios de prueba
-
-| Rol | Email | Contraseña |
-|---|---|---|
-| **STUDENT** | `alvarezsalasangelica8@gmail.com` | `miller_1234` |
-| **TEACHER** | `docente@gmail.com` | `miller_1234` |
-| **ADMIN** | `admin@gmail.com` | `miller_1234` |
-
-> Todos los usuarios comparten la misma contraseña `miller_1234`. Se puede acceder  con estos usuarios en: class-hub-seven.vercel.app porque las cuentas ya estén activadas (recuerda que la activación por correo está bloqueada en Render, ver sección siguiente).
 
 ## Puntos pendientes / a implementar
 
