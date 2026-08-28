@@ -33,9 +33,11 @@ public class TopicResourceProcessor {
 
             List<Document> documents = new TikaDocumentReader(file).get();
             TokenTextSplitter splitter = TokenTextSplitter.builder()
-                    .withChunkSize(100)
-                    .withMinChunkSizeChars(200)
-                    .withKeepSeparator(false)
+                    .withChunkSize(800)
+                    .withMinChunkSizeChars(350)
+                    .withMinChunkLengthToEmbed(5)
+                    .withMaxNumChunks(10000)
+                    .withKeepSeparator(true)
                     .build();
             List<Document> chunks = splitter.split(documents);
             Map<String, Object> metadata = buildMetadata(resource, userId);
