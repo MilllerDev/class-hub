@@ -1,5 +1,6 @@
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { ListTree } from "lucide-react";
+import { ChevronRight, ListTree } from "lucide-react";
+import Link from "next/link";
 import { getTopics } from "../action";
 
 export async function TopicList({ slug }: { slug: string }) {
@@ -16,15 +17,17 @@ export async function TopicList({ slug }: { slug: string }) {
   return (
     <div className="space-y-2">
       {topics.map((topic) => (
-        <div
+        <Link
           key={topic.id}
-          className="flex items-center gap-2.5 rounded-xl border border-border bg-card p-4"
+          href={`/student/courses/${slug}/${topic.id}`}
+          className="flex items-center gap-2.5 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-accent/50"
         >
           <ListTree className="size-4 shrink-0 text-muted-foreground" />
-          <p className="text-sm font-medium text-card-foreground">
+          <p className="flex-1 truncate text-sm font-medium text-card-foreground">
             {topic.title}
           </p>
-        </div>
+          <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+        </Link>
       ))}
     </div>
   );
