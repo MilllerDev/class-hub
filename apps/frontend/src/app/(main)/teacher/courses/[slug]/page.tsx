@@ -1,12 +1,9 @@
 import { getCourse } from "@/features/courses/action";
 import { CourseStatusBadge } from "@/features/courses/components/course-status-badge";
+import { TeacherTopicAccordion } from "@/features/topics/components/teacher-topic-accordion";
 import { TopicFormDialog } from "@/features/topics/components/topic-form-dialog";
-import {
-  TeacherTopicList,
-  TeacherTopicListSkeleton,
-} from "@/features/topics/components/teacher-topic-list";
 import { formatDate } from "@/lib/utils";
-import { Calendar, ClipboardList, ListTree } from "lucide-react";
+import { Calendar, ListTree } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -57,19 +54,9 @@ export default async function TeacherCourseDetailPage({
           </h2>
           <TopicFormDialog courseId={course.id} />
         </div>
-        <Suspense fallback={<TeacherTopicListSkeleton />}>
-          <TeacherTopicList slug={course.slug} courseId={course.id} />
+        <Suspense fallback={<>cargando</>}>
+          <TeacherTopicAccordion slug={course.slug} courseId={course.id} />
         </Suspense>
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-foreground">
-          <ClipboardList className="size-5" />
-          Tareas del curso
-        </h2>
-        <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-          Aún no hay tareas publicadas para este curso.
-        </div>
       </section>
     </div>
   );
