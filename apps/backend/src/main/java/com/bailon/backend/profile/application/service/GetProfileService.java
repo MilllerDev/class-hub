@@ -22,7 +22,12 @@ public class GetProfileService implements GetProfileUseCase, GetProfilesUseCase 
     }
 
     @Override
-    public Profile execute(UUID userId) {
+    public Profile me(UUID userId) {
+        return repository.findActiveUser(userId).orElseThrow(ProfileNotFoundException::new);
+    }
+
+    @Override
+    public Profile other(UUID userId) {
         return repository.findByUser(userId).orElseThrow(ProfileNotFoundException::new);
     }
 

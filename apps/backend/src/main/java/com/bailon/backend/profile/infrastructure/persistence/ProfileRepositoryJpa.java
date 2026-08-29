@@ -23,16 +23,15 @@ public interface ProfileRepositoryJpa extends JpaRepository<ProfileEntity, UUID>
 
     List<ProfileEntity> findByUserIdNot(UUID userId);
 
-    @Query("""
-            SELECT p FROM ProfileEntity p
-            WHERE p.user.id <> :userId
-              AND (:role IS NULL OR p.user.role = :role)
-              AND (:query IS NULL OR :query = ''
-                   OR p.name ILIKE CONCAT('%', :query, '%')
-                   OR p.lastName ILIKE CONCAT('%', :query, '%')
-                   OR p.user.email ILIKE CONCAT('%', :query, '%')
-                   OR CAST(p.user.role AS string) ILIKE CONCAT('%', :query, '%'))
-            ORDER BY p.user.createdAt DESC
+    @Query(""" 
+            SELECT p FROM ProfileEntity p WHERE p.user.id <> :userId
+                          AND (:role IS NULL OR p.user.role = :role)
+                          AND (:query IS NULL OR :query = ''
+                               OR p.name ILIKE CONCAT('%', :query, '%')
+                               OR p.lastName ILIKE CONCAT('%', :query, '%')
+                               OR p.user.email ILIKE CONCAT('%', :query, '%')
+                               OR CAST(p.user.role AS string) ILIKE CONCAT('%', :query, '%'))
+                        ORDER BY p.user.createdAt DESC
             """)
     Page<ProfileEntity> search(
             @Param("userId") UUID userId,
@@ -40,4 +39,6 @@ public interface ProfileRepositoryJpa extends JpaRepository<ProfileEntity, UUID>
             @Param("role") UserRole role,
             Pageable pageable
     );
+
+    Optional<ProfileEntity> findByUserIdAndUserEnabledTrue(UUID userId);
 }

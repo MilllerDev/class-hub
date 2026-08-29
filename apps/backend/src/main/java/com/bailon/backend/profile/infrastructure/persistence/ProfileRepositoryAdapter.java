@@ -34,6 +34,11 @@ public class ProfileRepositoryAdapter implements ProfileRepository {
     }
 
     @Override
+    public Optional<Profile> findActiveUser(UUID userId) {
+        return repositoryJpa.findByUserIdAndUserEnabledTrue(userId).map(mapper::toDomain);
+    }
+
+    @Override
     public List<Profile> findByUserIds(Collection<UUID> userIds) {
         return repositoryJpa.findByUserIdIn(userIds).stream().map(mapper::toDomain).toList();
     }
