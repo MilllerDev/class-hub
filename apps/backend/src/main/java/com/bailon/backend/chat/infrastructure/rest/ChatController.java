@@ -27,6 +27,7 @@ public class ChatController {
     private final DeleteMessage deleteMessage;
 
     @PostMapping("/messages")
+    @PreAuthorize("hasAuthority('STUDENT')")
     public ResponseEntity<ApiResponse<ChatMessage>> ask(
             @AuthenticationPrincipal AppUserPrincipal auth,
             @PathVariable UUID topicId,

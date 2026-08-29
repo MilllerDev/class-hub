@@ -2,10 +2,9 @@ package com.bailon.backend.profile.infrastructure.mapper;
 
 import com.bailon.backend.profile.domain.model.Profile;
 import com.bailon.backend.profile.infrastructure.persistence.ProfileEntity;
-import com.bailon.backend.profile.infrastructure.rest.request.ProfileRequest;
+import com.bailon.backend.profile.infrastructure.rest.request.PartialProfileRequest;
 import com.bailon.backend.profile.infrastructure.rest.response.ProfileResponse;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface ProfileMapper {
@@ -13,9 +12,8 @@ public interface ProfileMapper {
 
     ProfileEntity toEntity(Profile profile);
 
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    Profile toDomain(ProfileRequest request);
-
     ProfileResponse toDto(Profile profile);
+
+    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void toDomain(PartialProfileRequest partial, @MappingTarget Profile update);
 }

@@ -15,6 +15,8 @@ public interface ProfileRepository {
 
     Optional<Profile> findByUser(UUID userId);
 
+    Optional<Profile> findActiveUser(UUID userId);
+
     List<Profile> findByUserIds(Collection<UUID> userIds);
 
     List<Profile> profilesByRole(UserRole role, UUID userId);
