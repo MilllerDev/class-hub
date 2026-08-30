@@ -4,7 +4,7 @@ import { api } from "@/lib/api";
 import { Page } from "@/shared/types/page";
 import { updateTag } from "next/cache";
 import { User } from "../auth/types";
-import { Profile, ProfileParams } from "./types";
+import { Profile, ProfileParams, UpdateProfileRequest } from "./types";
 
 async function getProfile() {
   return await api.get<Profile>("/profiles", {
@@ -65,5 +65,26 @@ async function changeRole(id: string, role: string) {
   return { success, message };
 }
 
-export { changeRole, changeStatus, getProfile, getProfileByRole, listProfiles };
+async function getOtherProfile(userId: string) {
+  return await api.get<Profile>(`/profiles/${userId}`, {
+    next: { tags: [`user-${userId}`], revalidate: 3600 },
+  });
+}
 
+async function updateMyProfile(request: UpdateProfileRequest) {
+  const { success, message } = await api.patch<Profile>("/profiles", request);
+  if (success) {
+    updateTag("user-me");
+  }
+  return { success, message };
+}
+
+export {
+  changeRole,
+  changeStatus,
+  getOtherProfile,
+  getProfile,
+  getProfileByRole,
+  listProfiles,
+  updateMyProfile,
+};

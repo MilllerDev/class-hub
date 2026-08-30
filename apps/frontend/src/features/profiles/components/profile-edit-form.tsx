@@ -2,97 +2,119 @@
 
 import type { Profile } from "@/features/profiles/types";
 import { Button } from "@/shared/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/shared/components/ui/dialog";
 import { Input } from "@/shared/components/ui/input";
 import { toast } from "@/shared/components/ui/toast";
-import { Save } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Pencil } from "lucide-react";
 import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { updateMyProfile } from "../action";
+import { ProfileSchema, profileSchema } from "../schemas";
 
 export function ProfileEditForm({ profile }: { profile: Profile }) {
-  const [name, setName] = useState(profile.name);
-  const [lastName, setLastName] = useState(profile.lastName);
-  const [email, setEmail] = useState(profile.user.email);
-  const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl ?? "");
-  const [isSaving, setIsSaving] = useState(false);
+  const {
+    register,
+    formState: { isSubmitting, dirtyFields, isDirty, errors },
+    reset,
+    handleSubmit,
+  } = useForm<ProfileSchema>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      name: profile.name,
+      lastName: profile.lastName,
+    },
+  });
+  const [open, setOpen] = useState(false);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsSaving(true);
+  const onSubmit: SubmitHandler<ProfileSchema> = async (data) => {
+    const payload = Object.keys(dirtyFields).reduce((acc, key) => {
+      acc[key as keyof ProfileSchema] = data[key as keyof ProfileSchema];
+      return acc;
+    }, {} as Partial<ProfileSchema>);
 
-    setTimeout(() => {
-      setIsSaving(false);
-      toast.add({
-        type: "success",
-        description: "Perfil actualizado correctamente (demo).",
-      });
-    }, 800);
-  }
+    console.log(payload);
+
+    const { message, success } = await updateMyProfile(payload);
+    if (success) {
+      setOpen(false);
+    }
+    toast.add({ type: success ? "success" : "error", description: message });
+  };
+
+  const handleOpen = (isOpen: boolean) => {
+    setOpen(isOpen);
+    reset();
+  };
 
   return (
-    <section className="rounded-xl border border-border bg-card p-6">
-      <h2 className="text-lg font-semibold text-foreground">Editar perfil</h2>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Los cambios se guardan de forma local, aún no se conectan a la API.
-      </p>
-
-      <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-medium">
-              Nombre
-            </label>
-            <Input
-              id="name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder="Nombre"
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="lastName" className="text-sm font-medium">
-              Apellidos
-            </label>
-            <Input
-              id="lastName"
-              value={lastName}
-              onChange={(event) => setLastName(event.target.value)}
-              placeholder="Apellidos"
-            />
-          </div>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">
-              Email
-            </label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="correo@ejemplo.com"
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="avatarUrl" className="text-sm font-medium">
-              URL del avatar
-            </label>
-            <Input
-              id="avatarUrl"
-              value={avatarUrl}
-              onChange={(event) => setAvatarUrl(event.target.value)}
-              placeholder="https://..."
-            />
-          </div>
-        </div>
-
-        <div className="flex justify-end">
-          <Button type="submit" disabled={isSaving}>
-            <Save className="size-4" />
-            {isSaving ? "Guardando..." : "Guardar cambios"}
+    <Dialog open={open} onOpenChange={handleOpen}>
+      <DialogTrigger
+        render={
+          <Button type="button" variant="outline">
+            <Pencil className="size-4" />
+            Editar cuenta
           </Button>
-        </div>
-      </form>
-    </section>
+        }
+      />
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Editar cuenta</DialogTitle>
+          <DialogDescription>
+            Actualiza la información de tu perfil.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid gap-4">
+            <div className="space-y-2">
+              <label htmlFor="name" className="text-sm font-medium">
+                Nombre
+              </label>
+              <Input
+                id="name"
+                aria-invalid={!!errors.name}
+                {...register("name")}
+              />
+              {errors.name && (
+                <p className="text-xs text-destructive">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="lastName" className="text-sm font-medium">
+                Apellidos
+              </label>
+              <Input
+                id="lastName"
+                aria-invalid={!!errors.lastName}
+                {...register("lastName")}
+              />
+              {errors.lastName && (
+                <p className="text-xs text-destructive">
+                  {errors.lastName.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline">Cancelar</Button>} />
+            <Button type="submit" disabled={isSubmitting || !isDirty}>
+              {isSubmitting ? "Guardando" : "Guardar"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

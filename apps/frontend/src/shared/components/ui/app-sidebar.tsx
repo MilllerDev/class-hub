@@ -39,6 +39,8 @@ export async function AppSidebar() {
             <SidebarMenuButton size="lg" render={<Link href="/profile" />}>
               {profile.avatarUrl ? (
                 <Image
+                  width={100}
+                  height={100}
                   src={profile.avatarUrl}
                   alt={footerName}
                   className="size-8 rounded-full object-cover"
