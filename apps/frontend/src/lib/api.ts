@@ -1,5 +1,4 @@
 import { ApiResponse } from "@/shared/types/api-response";
-import { redirect } from "next/navigation";
 import { getServerTokens } from "./cookies";
 
 const BASE_URL = process.env.API_URL;
@@ -24,10 +23,6 @@ async function request<T>(
     ...options,
     headers,
   });
-
-  if (res.status === 401 || res.status === 403) {
-    redirect("/api/auth/clear-session");
-  }
 
   const data = await res.json();
   return data;

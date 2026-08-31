@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { updateSession } from "./features/auth/action";
 import { getProxyCookies } from "./lib/cookies";
 
-const protectedRoutes = ["/student", "/admin", "/teacher"];
+const protectedRoutes = ["/student", "/admin", "/teacher", "/profile"];
 const authRoutes = ["/login", "/register"];
 
 export const proxy: NextProxy = async (request) => {

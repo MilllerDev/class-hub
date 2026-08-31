@@ -1,5 +1,13 @@
 import { User } from "../auth/types";
 
+export type ProfileRequest = {
+  name: string;
+  lastName: string;
+  avatarUrl: string | null;
+};
+
+export type UpdateProfileRequest = Partial<ProfileRequest>;
+
 export type Profile = {
   id: string;
   name: string;

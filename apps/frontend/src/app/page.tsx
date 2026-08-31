@@ -1,5 +1,8 @@
+import { getServerTokens } from "@/lib/cookies";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { BarChart3, BookOpen, FolderOpen, GraduationCap } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
 const features = [
   {
@@ -42,18 +45,9 @@ export default function Home() {
           >
             Acerca de
           </a>
-          <a
-            href="/login"
-            className="px-4 py-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
-          >
-            Iniciar Sesión
-          </a>
-          <a
-            href="/register"
-            className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-          >
-            Registrarse
-          </a>
+          <Suspense fallback={<HeaderButtonSkeleton />}>
+            <InteractiveHeader />
+          </Suspense>
         </div>
       </nav>
 
@@ -66,18 +60,9 @@ export default function Home() {
           que necesitas en un solo lugar.
         </p>
         <div className="flex items-center gap-4 mt-8">
-          <Link
-            href="/login"
-            className="px-6 py-3 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
-          >
-            Iniciar Sesión
-          </Link>
-          <Link
-            href="/register"
-            className="px-6 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-          >
-            Registrarse
-          </Link>
+          <Suspense fallback={<AuthButtonsSkeleton />}>
+            <AuthButtons />
+          </Suspense>
         </div>
       </section>
 
@@ -125,5 +110,72 @@ export default function Home() {
         © 2026 ClassHub. Todos los derechos reservados.
       </footer>
     </div>
+  );
+}
+
+async function InteractiveHeader() {
+  const { accessToken, refreshToken } = await getServerTokens();
+  return accessToken || refreshToken ? (
+    <Link
+      href="/profile"
+      className="px-4 py-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
+    >
+      Mi cuenta
+    </Link>
+  ) : (
+    <>
+      <Link
+        href="/login"
+        className="px-4 py-2 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
+      >
+        Iniciar Sesión
+      </Link>
+      <Link
+        href="/register"
+        className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+      >
+        Registrarse
+      </Link>
+    </>
+  );
+}
+
+async function AuthButtons() {
+  const { accessToken, refreshToken } = await getServerTokens();
+  return accessToken || refreshToken ? (
+    <Link
+      href="/profile"
+      className="px-6 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+    >
+      Ir a mi cuenta
+    </Link>
+  ) : (
+    <>
+      <Link
+        href="/login"
+        className="px-6 py-3 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
+      >
+        Iniciar Sesión
+      </Link>
+      <Link
+        href="/register"
+        className="px-6 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+      >
+        Registrarse
+      </Link>
+    </>
+  );
+}
+
+function HeaderButtonSkeleton() {
+  return <Skeleton className="h-9 w-24 rounded-lg" />;
+}
+
+function AuthButtonsSkeleton() {
+  return (
+    <>
+      <Skeleton className="h-11 w-36 rounded-lg" />
+      <Skeleton className="h-11 w-36 rounded-lg" />
+    </>
   );
 }

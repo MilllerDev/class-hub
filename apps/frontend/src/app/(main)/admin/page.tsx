@@ -1,4 +1,5 @@
 import { getDashboard } from "@/features/dashboard/action";
+import { RoleBadge } from "@/shared/components/ui/role-badge";
 import {
   BookOpen,
   ClipboardCheck,
@@ -6,19 +7,6 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
-
-const roleLabels: Record<string, string> = {
-  admin: "Administrador",
-  teacher: "Docente",
-  student: "Estudiante",
-};
-
-const roleColors: Record<string, string> = {
-  admin: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
-  teacher:
-    "bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400",
-  student: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
-};
 
 function StatCard({
   label,
@@ -37,20 +25,6 @@ function StatCard({
       </div>
       <p className="mt-2 text-2xl font-bold text-card-foreground">{value}</p>
     </div>
-  );
-}
-
-function RoleBadge({ role }: { role: string }) {
-  const key = role.toLowerCase();
-  const label = roleLabels[key] ?? role;
-  const color = roleColors[key] ?? "bg-muted text-muted-foreground";
-
-  return (
-    <span
-      className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${color}`}
-    >
-      {label}
-    </span>
   );
 }
 
