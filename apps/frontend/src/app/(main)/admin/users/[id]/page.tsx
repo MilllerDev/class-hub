@@ -1,73 +1,45 @@
-import { ArrowLeft, BookOpen, Calendar, CalendarCheck, Clock, ClipboardCheck } from "lucide-react";
+import { getOtherProfile } from "@/features/profiles/action";
+import { formatDate } from "@/lib/utils";
+import { RoleBadge } from "@/shared/components/ui/role-badge";
+import { ArrowLeft, AtSign, CalendarDays, IdCard, Timer, User, UserRound } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
-const usersData: Record<
-  string,
-  {
-    name: string;
-    email: string;
-    role: string;
-    status: string;
-    joinedDate: string;
-    lastActive: string;
-    coursesAssigned: number;
-    tasksCompleted?: number;
-  }
-> = {
-  "u1": {
-    name: "Lucía Fernández",
-    email: "lucia.f@school.edu",
-    role: "Estudiante",
-    status: "Activo",
-    joinedDate: "28 jul 2026",
-    lastActive: "Hoy",
-    coursesAssigned: 5,
-    tasksCompleted: 12,
-  },
-  "u2": {
-    name: "Pedro Sánchez",
-    email: "pedro.s@school.edu",
-    role: "Docente",
-    status: "Activo",
-    joinedDate: "27 jul 2026",
-    lastActive: "Ayer",
-    coursesAssigned: 3,
-  },
-  default: {
-    name: "Usuario",
-    email: "usuario@school.edu",
-    role: "Estudiante",
-    status: "Activo",
-    joinedDate: "—",
-    lastActive: "—",
-    coursesAssigned: 0,
-    tasksCompleted: 0,
-  },
-};
-
-function StatusBadge({ status }: { status: string }) {
-  const color = status === "Activo"
-    ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-    : "bg-muted text-muted-foreground";
-
+function StatusBadge({ enabled }: { enabled: boolean }) {
   return (
-    <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${color}`}>
-      {status}
+    <span
+      className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+        enabled
+          ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+          : "bg-muted text-muted-foreground"
+      }`}
+    >
+      {enabled ? "Activo" : "Inactivo"}
     </span>
   );
 }
 
-function RoleBadge({ role }: { role: string }) {
-  const color = role === "Docente"
-    ? "bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400"
-    : role === "Administrador"
-      ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
-      : "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-
+function DetailItem({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+}) {
   return (
-    <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${color}`}>
-      {role}
-    </span>
+    <div className="flex items-center gap-3">
+      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+        <Icon className="size-4" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="truncate text-sm font-medium text-card-foreground">
+          {value}
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -77,12 +49,11 @@ export default async function AdminUserDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const user = usersData[id] ?? usersData.default;
-  const isStudent = user.role === "Estudiante";
+  const { data: profile } = await getOtherProfile(id);
 
-  return (
-    <div className="mx-auto w-full max-w-3xl space-y-8 px-4 py-8">
-      <section className="space-y-1">
+  if (!profile) {
+    return (
+      <div className="mx-auto w-full max-w-3xl space-y-8 px-4 py-8">
         <Link
           href="/admin/users"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -91,50 +62,76 @@ export default async function AdminUserDetailPage({
           Volver a usuarios
         </Link>
 
-        <div className="flex items-center gap-2 mt-2">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            {user.name}
+        <section className="rounded-xl border border-border bg-card p-8 text-center">
+          <h1 className="text-xl font-bold text-foreground">
+            Usuario no encontrado
           </h1>
-          <RoleBadge role={user.role} />
-          <StatusBadge status={user.status} />
-        </div>
-
-        <p className="text-sm text-muted-foreground">{user.email}</p>
-        <p className="text-xs text-muted-foreground font-mono">ID: {id}</p>
-      </section>
-
-      <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <div className="rounded-xl border border-border bg-card p-4 text-center">
-          <Calendar className="mx-auto size-5 text-muted-foreground" />
-          <p className="mt-1.5 text-lg font-bold text-card-foreground">{user.joinedDate}</p>
-          <p className="text-xs text-muted-foreground">Fecha ingreso</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-4 text-center">
-          <Clock className="mx-auto size-5 text-muted-foreground" />
-          <p className="mt-1.5 text-lg font-bold text-card-foreground">{user.lastActive}</p>
-          <p className="text-xs text-muted-foreground">Última actividad</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-4 text-center">
-          <BookOpen className="mx-auto size-5 text-muted-foreground" />
-          <p className="mt-1.5 text-lg font-bold text-card-foreground">{user.coursesAssigned}</p>
-          <p className="text-xs text-muted-foreground">
-            {user.role === "Docente" ? "Cursos a cargo" : "Cursos inscritos"}
+          <p className="mt-1 text-sm text-muted-foreground">
+            No se encontró un usuario con el ID: {id}
           </p>
+        </section>
+      </div>
+    );
+  }
+
+  const fullName = `${profile.name} ${profile.lastName}`;
+
+  return (
+    <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8">
+      <Link
+        href="/admin/users"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <ArrowLeft className="size-4" />
+        Volver a usuarios
+      </Link>
+
+      <section className="rounded-xl border border-border bg-card p-6">
+        <div className="mt-2 flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:gap-5">
+          {profile.avatarUrl ? (
+            <Image
+              src={profile.avatarUrl}
+              alt={fullName}
+              width={64}
+              height={64}
+              className="size-16 shrink-0 rounded-full object-cover"
+            />
+          ) : (
+            <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
+              <User className="size-8" />
+            </div>
+          )}
+          <div className="flex flex-col items-center gap-2 sm:items-start">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              {fullName}
+            </h1>
+            <p className="text-sm text-muted-foreground">{profile.user.email}</p>
+            <div className="flex items-center gap-2">
+              <RoleBadge role={profile.user.role} />
+              <StatusBadge enabled={profile.user.enabled} />
+            </div>
+          </div>
         </div>
-        {isStudent && (
-          <div className="rounded-xl border border-border bg-card p-4 text-center">
-            <ClipboardCheck className="mx-auto size-5 text-muted-foreground" />
-            <p className="mt-1.5 text-lg font-bold text-card-foreground">{user.tasksCompleted}</p>
-            <p className="text-xs text-muted-foreground">Tareas entregadas</p>
-          </div>
-        )}
-        {!isStudent && (
-          <div className="rounded-xl border border-border bg-card p-4 text-center">
-            <CalendarCheck className="mx-auto size-5 text-muted-foreground" />
-            <p className="mt-1.5 text-lg font-bold text-card-foreground">—</p>
-            <p className="text-xs text-muted-foreground">Tareas entregadas</p>
-          </div>
-        )}
+
+        <div className="mt-6 grid gap-4 border-t border-border pt-6 sm:grid-cols-2 lg:grid-cols-3">
+          <DetailItem icon={UserRound} label="Nombre" value={fullName} />
+          <DetailItem icon={AtSign} label="Email" value={profile.user.email} />
+          <DetailItem
+            icon={IdCard}
+            label="ID de perfil"
+            value={profile.id}
+          />
+          <DetailItem
+            icon={CalendarDays}
+            label="Fecha de ingreso"
+            value={formatDate(profile.user.createdAt)}
+          />
+          <DetailItem
+            icon={Timer}
+            label="Última actividad"
+            value={formatDate(profile.user.lastLogin)}
+          />
+        </div>
       </section>
     </div>
   );

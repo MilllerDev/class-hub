@@ -3,6 +3,7 @@ import { ProfileAvatar } from "@/features/profiles/components/profile-avatar";
 import { ProfileEditForm } from "@/features/profiles/components/profile-edit-form";
 import { ProfilePasswordForm } from "@/features/profiles/components/profile-password-form";
 import { formatDate } from "@/lib/utils";
+import { RoleBadge, roleLabel } from "@/shared/components/ui/role-badge";
 import {
   AtSign,
   CalendarDays,
@@ -13,33 +14,6 @@ import {
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
-
-const roleLabels: Record<string, string> = {
-  admin: "Administrador",
-  teacher: "Docente",
-  student: "Estudiante",
-};
-
-function RoleBadge({ role }: { role: string }) {
-  const key = role.toLowerCase();
-  const label = roleLabels[key] ?? role;
-  const color =
-    key === "admin"
-      ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
-      : key === "teacher"
-        ? "bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400"
-        : key === "student"
-          ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
-          : "bg-muted text-muted-foreground";
-
-  return (
-    <span
-      className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${color}`}
-    >
-      {label}
-    </span>
-  );
-}
 
 function StatusBadge({ enabled }: { enabled: boolean }) {
   return (
@@ -82,8 +56,7 @@ function DetailItem({
 export default async function ProfilePage() {
   const { data: profile } = await getProfile();
   const fullName = `${profile.name} ${profile.lastName}`;
-  const roleLabel =
-    roleLabels[profile.user.role.toLowerCase()] ?? profile.user.role;
+  const roleLabelValue = roleLabel(profile.user.role);
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8">
@@ -117,7 +90,7 @@ export default async function ProfilePage() {
         <div className="mt-6 grid gap-4 border-t border-border pt-6 sm:grid-cols-2 lg:grid-cols-3">
           <DetailItem icon={UserRound} label="Nombre" value={fullName} />
           <DetailItem icon={AtSign} label="Email" value={profile.user.email} />
-          <DetailItem icon={ShieldCheck} label="Rol" value={roleLabel} />
+          <DetailItem icon={ShieldCheck} label="Rol" value={roleLabelValue} />
           <DetailItem icon={IdCard} label="ID de usuario" value={profile.user.id} />
           <DetailItem
             icon={CalendarDays}
