@@ -1,22 +1,19 @@
 package com.bailon.backend.auth.infrastructure.rest;
 
-import com.bailon.backend.auth.application.usecase.ActivationAccountUseCase;
-import com.bailon.backend.auth.application.usecase.LoginUseCase;
-import com.bailon.backend.auth.application.usecase.RegisterUseCase;
-import com.bailon.backend.auth.application.usecase.ResendActivationUseCase;
+import com.bailon.backend.auth.application.usecase.*;
 import com.bailon.backend.auth.infrastructure.mapper.AuthMapper;
-import com.bailon.backend.auth.infrastructure.rest.request.LoginRequest;
-import com.bailon.backend.auth.infrastructure.rest.request.RefreshTokenRequest;
-import com.bailon.backend.auth.infrastructure.rest.request.RegisterRequest;
-import com.bailon.backend.auth.infrastructure.rest.request.ResendActivationRequest;
+import com.bailon.backend.auth.infrastructure.rest.request.*;
 import com.bailon.backend.config.ApiResponse;
 import com.bailon.backend.token.application.usecase.RefreshTokenUseCase;
 import com.bailon.backend.token.domain.model.Auth;
 import com.bailon.backend.users.domain.model.User;
 import com.bailon.backend.users.infrastructure.rest.response.UserResponse;
+import com.bailon.backend.users.infrastructure.security.AppUserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,6 +26,7 @@ public class AuthController {
     private final RefreshTokenUseCase refresh;
     private final ActivationAccountUseCase activateAccount;
     private final ResendActivationUseCase resendActivation;
+    private final ChangePasswordUseCase changePassword;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody RegisterRequest req) {
@@ -64,6 +62,16 @@ public class AuthController {
         resendActivation.execute(req.email());
         return ResponseEntity.ok(
                 ApiResponse.success("Se envió con éxito el link de activación", null)
+        );
+    }
+
+    @PostMapping("/change-password")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse<Auth>> change(
+            @AuthenticationPrincipal AppUserPrincipal auth, @Valid @RequestBody ChangePasswordRequest req) {
+        Auth response = changePassword.execute(auth.user().getId(), req.password(), req.newPassword(), req.confirmPassword());
+        return ResponseEntity.ok(
+                ApiResponse.success("Contraseña cambiada con existo", response)
         );
     }
 }

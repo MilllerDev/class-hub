@@ -13,13 +13,15 @@ public interface UserRepository {
 
     Optional<User> findByEmailPendingActivation(String email);
 
+    Optional<User> findById(UUID id);
+
+    Optional<User> findActive(UUID id);
+
+    Optional<User> findByIdPendingActivation(UUID id);
+
     boolean existsByEmail(String email);
 
     boolean hasRole(UUID userId, UserRole role);
-
-    Optional<User> findById(UUID id);
-
-    Optional<User> findByIdPendingActivation(UUID id);
 
     long count();
 }
