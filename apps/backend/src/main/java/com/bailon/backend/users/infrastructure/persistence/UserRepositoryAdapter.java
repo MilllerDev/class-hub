@@ -47,6 +47,11 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
+    public Optional<User> findActive(UUID id) {
+        return repositoryJpa.findByIdAndEnabledTrue(id).map(mapper::toDomain);
+    }
+
+    @Override
     public Optional<User> findByIdPendingActivation(UUID id) {
         return repositoryJpa.findByIdAndEnabledFalse(id).map(mapper::toDomain);
     }

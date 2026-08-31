@@ -33,6 +33,10 @@ public class User {
         return user;
     }
 
+    public boolean validatePassword(String newPassword, String confirmPassword) {
+        return newPassword.equals(confirmPassword);
+    }
+
     public void activate() {
         if (this.enabled) {
             throw new AccountAlreadyActiveException("La cuenta ya está activa");
