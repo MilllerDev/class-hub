@@ -38,7 +38,7 @@ function PasswordInput({
         <Input
           type={show ? "text" : "password"}
           autoComplete="off"
-          className="pr-9"
+          className="pr-8"
           aria-invalid={!!error}
           {...props}
         />
@@ -48,7 +48,7 @@ function PasswordInput({
           size="icon-sm"
           aria-label={show ? "Ocultar contraseña" : "Mostrar contraseña"}
           onClick={() => setShow(!show)}
-          className="absolute inset-y-0 right-0 h-full rounded-l-none"
+          className="absolute inset-y-0 right-0.5 h-full rounded-l-none"
         >
           {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
         </Button>
