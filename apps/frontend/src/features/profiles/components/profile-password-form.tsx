@@ -1,5 +1,8 @@
 "use client";
 
+import { changePassword } from "@/features/auth/action";
+import { changePasswordSchema } from "@/features/auth/schemas";
+import { ChangePasswordRequest } from "@/features/auth/types";
 import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
@@ -17,25 +20,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyRound, Lock } from "lucide-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
-
-const passwordSchema = z
-  .object({
-    currentPassword: z
-      .string()
-      .trim()
-      .min(1, { message: "La contraseña actual es obligatoria" }),
-    newPassword: z.string().trim().min(6, {
-      message: "La nueva contraseña debe tener mínimo 6 carácteres",
-    }),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
-    path: ["confirmPassword"],
-  });
-
-type PasswordFields = z.infer<typeof passwordSchema>;
 
 export function ProfilePasswordForm() {
   const [open, setOpen] = useState(false);
@@ -45,30 +29,23 @@ export function ProfilePasswordForm() {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting, isDirty },
-  } = useForm<PasswordFields>({
-    resolver: zodResolver(passwordSchema),
+  } = useForm<ChangePasswordRequest>({
+    resolver: zodResolver(changePasswordSchema),
   });
 
-  const onSubmit: SubmitHandler<PasswordFields> = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    setOpen(false);
+  const onSubmit: SubmitHandler<ChangePasswordRequest> = async (data) => {
+    const { success, message } = await changePassword(data);
+    if (success) setOpen(false);
+    toast.add({ type: success ? "success" : "error", description: message });
+  };
+
+  const handleOpen = (isOpen: boolean) => {
+    setOpen(isOpen);
     reset();
-    toast.add({
-      type: "success",
-      description: "Contraseña actualizada correctamente (demo).",
-    });
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(isOpen) => {
-        setOpen(isOpen);
-        if (!isOpen) {
-          reset();
-        }
-      }}
-    >
+    <Dialog open={open} onOpenChange={handleOpen}>
       <DialogTrigger
         render={
           <Button type="button" variant="outline">
@@ -87,10 +64,10 @@ export function ProfilePasswordForm() {
 
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <PasswordInput
-            id="currentPassword"
+            id="password"
             label="Contraseña actual"
-            error={errors.currentPassword?.message}
-            {...register("currentPassword")}
+            error={errors.password?.message}
+            {...register("password")}
           />
 
           <PasswordInput

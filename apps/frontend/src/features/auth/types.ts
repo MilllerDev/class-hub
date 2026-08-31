@@ -12,6 +12,12 @@ export type RegisterRequest = {
   };
 };
 
+export type ChangePasswordRequest = {
+  password: string;
+  newPassword: string;
+  confirmPassword: string;
+};
+
 export type Auth = {
   accessToken: string;
   refreshToken: string;

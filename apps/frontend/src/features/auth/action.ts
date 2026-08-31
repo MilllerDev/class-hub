@@ -3,7 +3,13 @@
 import { api } from "@/lib/api";
 import { clearServerTokens, setServerTokens } from "@/lib/cookies";
 import { redirect } from "next/navigation";
-import { Auth, LoginRequest, RegisterRequest, User } from "./types";
+import {
+  Auth,
+  ChangePasswordRequest,
+  LoginRequest,
+  RegisterRequest,
+  User,
+} from "./types";
 
 async function login(request: LoginRequest) {
   const res = await api.post<Auth>("/auth/login", request);
@@ -58,5 +64,23 @@ async function updateSession(token: string) {
   return { success };
 }
 
-export { activateAccount, login, register, resendActivation, updateSession };
+async function changePassword(request: ChangePasswordRequest) {
+  const res = await api.post<Auth>("/auth/change-password", request);
+  const { data, success, message } = res;
+  if (success && data) {
+    const { accessToken, refreshToken } = data;
+    await setServerTokens({ accessToken, refreshToken });
+    return { success, message };
+  }
+  return { success, message };
+}
+
+export {
+  activateAccount,
+  changePassword,
+  login,
+  register,
+  resendActivation,
+  updateSession
+};
 
