@@ -1,4 +1,4 @@
-import { getTopicResources } from "@/features/topics/action";
+import { getTopicResources } from "@/features/topic-resources/actions";
 import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 import { ListResources } from "./list-resources";
@@ -24,3 +24,4 @@ async function ListResourcesServer({
 }
 
 export { ListResourcesServer };
+

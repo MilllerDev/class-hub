@@ -1,15 +1,16 @@
+import { TopicResourceUpload } from "@/features/topic-resources/components/topic-resource-upload";
+import { TopicResources } from "@/features/topic-resources/components/topic-resources";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/shared/components/ui/accordion";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { ListTree } from "lucide-react";
-import { getTopics } from "../action";
+import { getTopics } from "../actions";
 import { TopicDeleteDialog } from "./topic-delete-dialog";
 import { TopicFormDialog } from "./topic-form-dialog";
-import { TopicResourceUpload } from "./topic-resource-upload";
-import { TopicResources } from "./topics-resources";
 
 async function TeacherTopicAccordion({
   slug,
@@ -62,4 +63,33 @@ async function TeacherTopicAccordion({
   );
 }
 
-export { TeacherTopicAccordion };
+function TeacherTopicAccordionSkeleton() {
+  return (
+    <div className="w-full rounded-xl border">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div key={i} className="border-b p-2.5 last:border-b-0">
+          <div className="flex items-center justify-between gap-2 px-1">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <Skeleton className="size-4 shrink-0 rounded-full" />
+              <Skeleton className="h-4 w-40" />
+            </div>
+            <div className="flex shrink-0 items-center gap-0.5">
+              <Skeleton className="size-7 rounded-[min(var(--radius-md),12px)]" />
+              <Skeleton className="size-7 rounded-[min(var(--radius-md),12px)]" />
+            </div>
+          </div>
+          <div className="px-3 py-3">
+            <div className="flex flex-wrap gap-2">
+              <Skeleton className="h-6 w-24 rounded-full" />
+              <Skeleton className="h-6 w-32 rounded-full" />
+            </div>
+            <Skeleton className="mt-3 h-7 w-28 rounded-[min(var(--radius-md),12px)]" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export { TeacherTopicAccordion, TeacherTopicAccordionSkeleton };
+

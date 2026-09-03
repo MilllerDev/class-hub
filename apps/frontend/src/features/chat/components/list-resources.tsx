@@ -1,6 +1,6 @@
 "use client";
 
-import { ResourceType } from "@/features/topics/types";
+import { ResourceType } from "@/features/topic-resources/types";
 import {
   CheckCircle2,
   Download,

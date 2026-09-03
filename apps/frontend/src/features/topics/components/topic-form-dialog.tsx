@@ -1,9 +1,5 @@
 "use client";
 
-import { upsertTopic } from "@/features/topics/action";
-import { topicSchema } from "@/features/topics/schemas";
-import type { topicFields } from "@/features/topics/schemas";
-import type { Topic } from "@/features/topics/types";
 import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
@@ -21,6 +17,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, Plus } from "lucide-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { upsertTopic } from "../actions";
+import { TopicFields, topicSchema } from "../schemas";
+import { Topic } from "../types";
 
 export function TopicFormDialog({
   courseId,
@@ -44,7 +43,7 @@ export function TopicFormDialog({
     },
   });
 
-  const onSubmit: SubmitHandler<topicFields> = async (data) => {
+  const onSubmit: SubmitHandler<TopicFields> = async (data) => {
     const { success, message } = await upsertTopic(
       { title: data.title, courseId },
       topic?.id,

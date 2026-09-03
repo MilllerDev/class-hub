@@ -1,6 +1,9 @@
 import { getCourse } from "@/features/courses/action";
 import { CourseStatusBadge } from "@/features/courses/components/course-status-badge";
-import { TeacherTopicAccordion } from "@/features/topics/components/teacher-topic-accordion";
+import {
+  TeacherTopicAccordion,
+  TeacherTopicAccordionSkeleton,
+} from "@/features/topics/components/teacher-topic-accordion";
 import { TopicFormDialog } from "@/features/topics/components/topic-form-dialog";
 import { formatDate } from "@/lib/utils";
 import { Calendar, ListTree } from "lucide-react";
@@ -54,7 +57,7 @@ export default async function TeacherCourseDetailPage({
           </h2>
           <TopicFormDialog courseId={course.id} />
         </div>
-        <Suspense fallback={<>cargando</>}>
+        <Suspense fallback={<TeacherTopicAccordionSkeleton />}>
           <TeacherTopicAccordion slug={course.slug} courseId={course.id} />
         </Suspense>
       </section>

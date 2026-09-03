@@ -1,7 +1,7 @@
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { ChevronRight, ListTree } from "lucide-react";
 import Link from "next/link";
-import { getTopics } from "../action";
+import { getTopics } from "../actions";
 
 export async function TopicList({ slug }: { slug: string }) {
   const { data: topics } = await getTopics(slug);

@@ -8,4 +8,4 @@ export const topicSchema = z.object({
     .max(100, { message: "El título no debe de exceder los 100 carácteres" }),
 });
 
-export type topicFields = z.infer<typeof topicSchema>;
+export type TopicFields = z.infer<typeof topicSchema>;

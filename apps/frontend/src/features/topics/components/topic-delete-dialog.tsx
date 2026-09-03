@@ -16,9 +16,15 @@ import { Button } from "@/shared/components/ui/button";
 import { toast } from "@/shared/components/ui/toast";
 import { Trash2, TriangleAlert } from "lucide-react";
 import { useState } from "react";
-import { deleteTopic } from "../action";
+import { deleteTopic } from "../actions";
 
-export function TopicDeleteDialog({ id, title }: { id: string; title: string }) {
+export function TopicDeleteDialog({
+  id,
+  title,
+}: {
+  id: string;
+  title: string;
+}) {
   const [open, setOpen] = useState(false);
   async function handle() {
     const { message } = await deleteTopic(id);
@@ -41,8 +47,8 @@ export function TopicDeleteDialog({ id, title }: { id: string; title: string }) 
           </AlertDialogMedia>
           <AlertDialogTitle>Eliminar tema</AlertDialogTitle>
           <AlertDialogDescription>
-            ¿Estás seguro de eliminar <strong>{title}</strong>? Esta acción no se
-            puede deshacer.
+            ¿Estás seguro de eliminar <strong>{title}</strong>? Esta acción no
+            se puede deshacer.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

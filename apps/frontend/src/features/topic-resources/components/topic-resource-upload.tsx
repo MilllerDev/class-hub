@@ -4,7 +4,7 @@ import { Button } from "@/shared/components/ui/button";
 import { toast } from "@/shared/components/ui/toast";
 import { Loader2, Sparkles, Upload } from "lucide-react";
 import { useRef, useState } from "react";
-import { proccesUploadFile } from "../action";
+import { processUploadFile } from "../actions";
 
 export function TopicResourceUpload({ topicId }: { topicId: string }) {
   const [uploading, setUploading] = useState(false);
@@ -34,7 +34,7 @@ export function TopicResourceUpload({ topicId }: { topicId: string }) {
       setUploading(false);
       setProcessing(true);
 
-      const response = await proccesUploadFile(topicId, request);
+      const response = await processUploadFile(topicId, request);
 
       setProcessing(false);
 
