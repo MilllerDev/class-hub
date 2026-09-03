@@ -1,6 +1,6 @@
 "use client";
 
-import { TopicResource } from "@/features/topics/types";
+import { TopicResource } from "@/features/topic-resources/types";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 type ResourcesContextProps = {

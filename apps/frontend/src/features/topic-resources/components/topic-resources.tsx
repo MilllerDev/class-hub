@@ -1,6 +1,7 @@
 import { File, FileText, Presentation } from "lucide-react";
-import { getTopicResources } from "../action";
+import { getTopicResources } from "../actions";
 import { ResourceType } from "../types";
+import { ResourceDeleteDialog } from "./resource-delete-dialog";
 
 function getFileIcon(type: ResourceType) {
   switch (type) {
@@ -32,19 +33,25 @@ async function TopicResources({ topicId }: { topicId: string }) {
   return (
     <div className="flex flex-wrap gap-2">
       {resources.map(({ id, fileName, fileUrl, fileType }) => (
-        <a
+        <div
           key={id}
-          href={fileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${getPillStyles(fileType)}`}
+          className={`inline-flex items-center gap-1 rounded-full border py-1 pl-2.5 pr-1 text-xs font-medium transition-colors ${getPillStyles(fileType)}`}
         >
-          {getFileIcon(fileType)}
-          {fileName}
-        </a>
+          <a
+            href={fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-w-0 items-center gap-1.5"
+          >
+            {getFileIcon(fileType)}
+            <span className="truncate">{fileName}</span>
+          </a>
+          <ResourceDeleteDialog topicId={topicId} id={id} fileName={fileName} />
+        </div>
       ))}
     </div>
   );
 }
 
 export { TopicResources };
+

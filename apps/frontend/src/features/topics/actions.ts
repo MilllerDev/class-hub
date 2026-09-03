@@ -2,12 +2,7 @@
 
 import { api } from "@/lib/api";
 import { updateTag } from "next/cache";
-import {
-  Topic,
-  TopicRequest,
-  TopicResource,
-  TopicResourceRequest,
-} from "./types";
+import { Topic, TopicRequest } from "./types";
 
 async function createTopic(request: TopicRequest) {
   const res = await api.post<Topic>("/topics", request);
@@ -49,33 +44,11 @@ async function upsertTopic(request: TopicRequest, id?: string) {
   return id ? await updateTopic(id, request) : await createTopic(request);
 }
 
-async function proccesUploadFile(
-  topicId: string,
-  request: TopicResourceRequest,
-) {
-  const res = await api.post<TopicResource>(
-    `/topic/${topicId}/resources`,
-    request,
-  );
-  if (res.success) {
-    updateTag("resources");
-  }
-  return res;
-}
-
-async function getTopicResources(topicId: string) {
-  return await api.get<TopicResource[]>(`/topic/${topicId}/resources`, {
-    next: { revalidate: 3600, tags: ["resources"] },
-  });
-}
-
 export {
   createTopic,
   deleteTopic,
   getTopic,
-  getTopicResources,
   getTopics,
-  proccesUploadFile,
   updateTopic,
   upsertTopic
 };
