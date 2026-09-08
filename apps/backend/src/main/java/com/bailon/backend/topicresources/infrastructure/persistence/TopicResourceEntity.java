@@ -1,6 +1,6 @@
 package com.bailon.backend.topicresources.infrastructure.persistence;
 
-import com.bailon.backend.topicresources.domain.model.ProcessingStatus;
+import com.bailon.backend.topicresources.domain.model.ResourceStatus;
 import com.bailon.backend.topicresources.domain.model.ResourceType;
 import com.bailon.backend.topics.infrastructure.persistence.TopicEntity;
 import jakarta.persistence.*;
@@ -37,11 +37,11 @@ public class TopicResourceEntity {
     private ResourceType fileType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "processing_status", nullable = false, length = 20)
-    private ProcessingStatus processingStatus;
+    @Column(name = "resource_status", nullable = false, length = 20)
+    private ResourceStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "topic_id")
+    @JoinColumn(name = "topic_id", updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private TopicEntity topic;
 

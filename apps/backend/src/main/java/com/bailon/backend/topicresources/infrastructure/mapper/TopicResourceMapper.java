@@ -2,7 +2,7 @@ package com.bailon.backend.topicresources.infrastructure.mapper;
 
 import com.bailon.backend.topicresources.domain.model.TopicResource;
 import com.bailon.backend.topicresources.infrastructure.persistence.TopicResourceEntity;
-import com.bailon.backend.topicresources.infrastructure.rest.request.AddTopicResourceRequest;
+import com.bailon.backend.topicresources.infrastructure.rest.request.TopicResourceRequest;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,5 +17,5 @@ public interface TopicResourceMapper {
     TopicResourceEntity toEntity(TopicResource resource);
 
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
-    TopicResource toDomain(AddTopicResourceRequest request);
+    TopicResource toDomain(TopicResourceRequest request);
 }

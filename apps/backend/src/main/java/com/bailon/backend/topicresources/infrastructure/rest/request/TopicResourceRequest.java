@@ -5,7 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record AddTopicResourceRequest(
+import java.util.UUID;
+
+public record TopicResourceRequest(
         @NotBlank(message = "El nombre del archivo es obligatorio")
         @Size(max = 255, message = "El nombre del archivo no puede superar los 255 caracteres")
         String fileName,
@@ -14,6 +16,9 @@ public record AddTopicResourceRequest(
         String fileUrl,
 
         @NotNull(message = "El tipo de archivo es obligatorio")
-        ResourceType fileType
+        ResourceType fileType,
+
+        @NotNull(message = "Es necesario que esté asociado a un tema")
+        UUID topicId
 ) {
 }

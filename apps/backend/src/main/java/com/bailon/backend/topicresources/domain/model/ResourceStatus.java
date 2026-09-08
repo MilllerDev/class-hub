@@ -1,6 +1,6 @@
 package com.bailon.backend.topicresources.domain.model;
 
-public enum ProcessingStatus {
+public enum ResourceStatus {
     PENDING,
     PROCESSING,
     COMPLETED,
