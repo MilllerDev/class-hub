@@ -79,10 +79,10 @@ public class PgVectorResourceAdapter implements PgVectorResourcePort {
 
     private Map<String, Object> buildMetadata(TopicResource resource, UUID courseId, UUID userId) {
         return Map.of(
-                VectorMetadataKeys.TOPIC_RESOURCE_ID, resource.getId().toString(),
-                VectorMetadataKeys.TOPIC_ID, resource.getTopicId().toString(),
-                VectorMetadataKeys.USER_ID, userId.toString(),
-                VectorMetadataKeys.COURSE_ID, courseId.toString(),
+                VectorMetadataKeys.TOPIC_RESOURCE_ID, resource.getId(),
+                VectorMetadataKeys.TOPIC_ID, resource.getTopicId(),
+                VectorMetadataKeys.USER_ID, userId,
+                VectorMetadataKeys.COURSE_ID, courseId,
                 VectorMetadataKeys.DOCUMENT_NAME, resource.getFileName()
         );
     }
