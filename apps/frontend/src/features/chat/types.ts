@@ -1,6 +1,6 @@
 export type SendMessageRequest = {
   question: string;
-  resourcesId: string[];
+  resourceIds: string[];
 };
 
 export type ChatMessage = {

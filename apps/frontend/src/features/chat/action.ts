@@ -5,10 +5,11 @@ import { updateTag } from "next/cache";
 import type { ChatMessage, SendMessageRequest } from "./types";
 
 async function sendMessage(topicId: string, request: SendMessageRequest) {
-  const { success } = await api.post<ChatMessage>(
+  const { data,message ,success } = await api.post<ChatMessage>(
     `/topic/${topicId}/chat/messages`,
     request,
   );
+console.log("sendMessage response:", { data, message, success });
   if (success) {
     updateTag(`chat-messages-${topicId}`);
   }

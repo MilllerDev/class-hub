@@ -22,7 +22,7 @@ export function InputSendMessage({ topicId }: { topicId: string }) {
     setIsSending(true);
     const success = await sendMessage(topicId, {
       question: data.question,
-      resourcesId: [...checked],
+      resourceIds: [...checked],
     });
     if (success) {
       reset();

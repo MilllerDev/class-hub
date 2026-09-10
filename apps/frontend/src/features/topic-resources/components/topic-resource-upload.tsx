@@ -30,11 +30,12 @@ export function TopicResourceUpload({ topicId }: { topicId: string }) {
         fileName: file.name,
         fileUrl: result.url,
         fileType: result.type,
+        topicId,
       };
       setUploading(false);
       setProcessing(true);
 
-      const response = await processUploadFile(topicId, request);
+      const response = await processUploadFile(request);
 
       setProcessing(false);
 
