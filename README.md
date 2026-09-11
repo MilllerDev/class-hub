@@ -2,6 +2,8 @@
 
 Plataforma educativa de gestión de cursos con asistente de IA basado en RAG. Permite a los profesores crear cursos y temas, subir recursos (PDF, DOCX, PPTX), y responder preguntas de los estudiantes sobre el contenido mediante un chatbot con IA.
 
+> **Aviso:** Este repositorio corresponde a un proyecto de aprendizaje y portafolio personal. Su finalidad es exclusivamente educativa y demostrativa. No se ofrece como producto comercial ni se generan ingresos mediante este proyecto.
+
 ## Stack tecnológico
 
 Este es un **monorepo** dividido en tres áreas:
