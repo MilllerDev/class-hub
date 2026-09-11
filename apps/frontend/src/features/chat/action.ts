@@ -5,11 +5,11 @@ import { updateTag } from "next/cache";
 import type { ChatMessage, SendMessageRequest } from "./types";
 
 async function sendMessage(topicId: string, request: SendMessageRequest) {
-  const { data,message ,success } = await api.post<ChatMessage>(
+  const { data, message, success } = await api.post<ChatMessage>(
     `/topic/${topicId}/chat/messages`,
     request,
   );
-console.log("sendMessage response:", { data, message, success });
+  console.log("sendMessage response:", { data, message, success });
   if (success) {
     updateTag(`chat-messages-${topicId}`);
   }
@@ -22,4 +22,15 @@ async function getChatHistory(topicId: string) {
   });
 }
 
-export { getChatHistory, sendMessage };
+async function deleteChat(topicId: string, id: string) {
+  const { message, success } = await api.delete(
+    `/topic/${topicId}/chat/messages/${id}`,
+  );
+  if (success) {
+    updateTag(`chat-messages-${topicId}`);
+  }
+  return { message, success };
+}
+
+export { deleteChat, getChatHistory, sendMessage };
+
