@@ -2,6 +2,7 @@ import { formatDate } from "@/lib/utils";
 import { Bot, User } from "lucide-react";
 import { getChatHistory } from "../action";
 import { ChatAutoScroll } from "./chat-auto-scroll";
+import { ChatMessageDeleteButton } from "./chat-message-delete-button";
 
 export async function ChatHistory({ topicId }: { topicId: string }) {
   const { data: messages } = await getChatHistory(topicId);
@@ -20,6 +21,7 @@ export async function ChatHistory({ topicId }: { topicId: string }) {
               <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
                 <User className="size-3.5 text-primary" />
               </div>
+              <ChatMessageDeleteButton topicId={topicId} id={msg.id} />
             </div>
           </div>
 

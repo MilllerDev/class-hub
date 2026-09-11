@@ -4,14 +4,8 @@ import { api } from "@/lib/api";
 import { updateTag } from "next/cache";
 import { TopicResource, TopicResourceRequest } from "./types";
 
-async function processUploadFile(
-  topicId: string,
-  request: TopicResourceRequest,
-) {
-  const res = await api.post<TopicResource>(
-    `/topic/${topicId}/resources`,
-    request,
-  );
+async function processUploadFile(request: TopicResourceRequest) {
+  const res = await api.post<TopicResource>("/topic-resources", request);
   if (res.success) {
     updateTag("resources");
   }
@@ -19,7 +13,7 @@ async function processUploadFile(
 }
 
 async function getTopicResources(topicId: string) {
-  return await api.get<TopicResource[]>(`/topic/${topicId}/resources`, {
+  return await api.get<TopicResource[]>(`/topic-resources/topic/${topicId}`, {
     next: { revalidate: 3600, tags: ["resources"] },
   });
 }
