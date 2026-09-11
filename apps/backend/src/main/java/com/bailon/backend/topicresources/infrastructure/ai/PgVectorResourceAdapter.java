@@ -92,7 +92,7 @@ public class PgVectorResourceAdapter implements PgVectorResourcePort {
         FilterExpressionBuilder.Op topicFilter = builder.eq(VectorMetadataKeys.TOPIC_ID, topicId);
         return builder.and(
                 topicFilter,
-                builder.in(VectorMetadataKeys.TOPIC_RESOURCE_ID, topicResourceIds)
+                builder.in(VectorMetadataKeys.TOPIC_RESOURCE_ID, topicResourceIds.toArray())
         ).build();
     }
 }
