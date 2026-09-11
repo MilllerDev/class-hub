@@ -4,40 +4,29 @@ import com.bailon.backend.topicresources.application.port.TopicResourceRepositor
 import com.bailon.backend.topicresources.application.usecase.DeleteTopicResourceUseCase;
 import com.bailon.backend.topicresources.domain.event.TopicResourcesDeletedEvent;
 import com.bailon.backend.topicresources.domain.exception.TopicResourceNotFoundException;
-import com.bailon.backend.topicresources.domain.model.TopicResource;
-import com.bailon.backend.topics.application.usecase.GetTopicsUseCase;
-import com.bailon.backend.users.domain.model.UserRole;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
 public class DeleteTopicResourceService implements DeleteTopicResourceUseCase {
-    private final GetTopicsUseCase getTopics;
     private final TopicResourceRepository repository;
-    private final ApplicationEventPublisher eventPublisher;
+    private final ApplicationEventPublisher event;
 
-    public DeleteTopicResourceService(
-            GetTopicsUseCase getTopics,
-            TopicResourceRepository repository,
-            ApplicationEventPublisher eventPublisher
-    ) {
-        this.getTopics = getTopics;
+    public DeleteTopicResourceService(TopicResourceRepository repository, ApplicationEventPublisher event) {
         this.repository = repository;
-        this.eventPublisher = eventPublisher;
+        this.event = event;
     }
 
     @Override
     @Transactional
-    public void execute(UUID teacherId, UUID topicId, UUID resourceId) {
-        getTopics.one(topicId, teacherId, UserRole.TEACHER);
-        TopicResource resource = repository.findByIdAndTopicId(resourceId, topicId).orElseThrow(
-                () -> new TopicResourceNotFoundException("No se encontró el recurso")
-        );
-        repository.delete(resource.getId());
-        eventPublisher.publishEvent(new TopicResourcesDeletedEvent(List.of(resource.getId())));
+    public void execute(UUID teacherId, UUID resourceId) {
+        if (!repository.existsByOwnerId(resourceId, teacherId)) {
+            throw new TopicResourceNotFoundException("No se encontró el recurso");
+        }
+        repository.delete(resourceId);
+        event.publishEvent(new TopicResourcesDeletedEvent(resourceId));
     }
 }

@@ -50,6 +50,11 @@ public class TopicRepositoryAdapter implements TopicRepository {
     }
 
     @Override
+    public UUID findCourse(UUID topicId) {
+        return repositoryJpa.findCourseByTopicId(topicId);
+    }
+
+    @Override
     public boolean exists(UUID id) {
         return repositoryJpa.existsById(id);
     }

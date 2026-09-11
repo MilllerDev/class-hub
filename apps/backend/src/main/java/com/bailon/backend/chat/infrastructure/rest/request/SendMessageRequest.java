@@ -11,6 +11,6 @@ public record SendMessageRequest(
         @Size(max = 2000, message = "La pregunta no puede superar los 2000 caracteres")
         String question,
 
-        List<UUID> resourcesId
+        List<UUID> resourceIds
 ) {
 }

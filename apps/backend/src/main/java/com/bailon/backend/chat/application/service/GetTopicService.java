@@ -1,7 +1,7 @@
 package com.bailon.backend.chat.application.service;
 
 import com.bailon.backend.chat.application.port.ChatMessageRepository;
-import com.bailon.backend.chat.application.usecase.GetTopicMessages;
+import com.bailon.backend.chat.application.usecase.ListChatUseCase;
 import com.bailon.backend.chat.domain.model.ChatMessage;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class GetTopicMessagesService implements GetTopicMessages {
+public class GetTopicService implements ListChatUseCase {
     private final ChatMessageRepository repository;
 
-    public GetTopicMessagesService(ChatMessageRepository repository) {
+    public GetTopicService(ChatMessageRepository repository) {
         this.repository = repository;
     }
 

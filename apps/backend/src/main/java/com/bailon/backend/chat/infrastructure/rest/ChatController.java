@@ -1,8 +1,8 @@
 package com.bailon.backend.chat.infrastructure.rest;
 
-import com.bailon.backend.chat.application.usecase.DeleteMessage;
-import com.bailon.backend.chat.application.usecase.GetTopicMessages;
-import com.bailon.backend.chat.application.usecase.SendMessage;
+import com.bailon.backend.chat.application.usecase.DeleteMessageUseCase;
+import com.bailon.backend.chat.application.usecase.ListChatUseCase;
+import com.bailon.backend.chat.application.usecase.SendMessageUseCase;
 import com.bailon.backend.chat.domain.model.ChatMessage;
 import com.bailon.backend.chat.infrastructure.rest.request.SendMessageRequest;
 import com.bailon.backend.config.ApiResponse;
@@ -22,9 +22,9 @@ import java.util.UUID;
 @RequestMapping("/topic/{topicId}/chat")
 @RequiredArgsConstructor
 public class ChatController {
-    private final SendMessage sendMessage;
-    private final GetTopicMessages getMessages;
-    private final DeleteMessage deleteMessage;
+    private final SendMessageUseCase sendMessage;
+    private final ListChatUseCase getMessages;
+    private final DeleteMessageUseCase deleteMessage;
 
     @PostMapping("/messages")
     @PreAuthorize("hasAuthority('STUDENT')")
@@ -34,7 +34,7 @@ public class ChatController {
             @Valid @RequestBody SendMessageRequest req
     ) {
         ChatMessage message = sendMessage.send(
-                auth.user().getId(), topicId, req.question(), req.resourcesId()
+                auth.user().getId(), topicId, req.question(), req.resourceIds()
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.success("Pregunta respondida", message)

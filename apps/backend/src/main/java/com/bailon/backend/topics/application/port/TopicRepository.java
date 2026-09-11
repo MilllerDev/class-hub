@@ -18,6 +18,8 @@ public interface TopicRepository {
 
     List<Topic> findAllBelongTeacher(String slug, UUID userId, TopicOrder order);
 
+    UUID findCourse(UUID topicId);
+
     boolean exists(UUID id);
 
     boolean courseOwnedByTeacher(UUID courseId, UUID teacherId);

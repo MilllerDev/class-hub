@@ -26,28 +26,35 @@ public class TopicResourceRepositoryAdapter implements TopicResourceRepository {
     }
 
     @Override
-    public Optional<TopicResource> findById(UUID id) {
-        return repositoryJpa.findById(id).map(mapper::toDomain);
+    public boolean existsById(UUID id) {
+        return repositoryJpa.existsById(id);
     }
 
     @Override
-    public Optional<TopicResource> findByIdAndTopicId(UUID id, UUID topicId) {
-        return repositoryJpa.findByIdAndTopicId(id, topicId).map(mapper::toDomain);
+    public Optional<TopicResource> findByIdAndOwner(UUID id, UUID userId) {
+        return repositoryJpa.findByIdAndTopicCourseUserId(id, userId).map(mapper::toDomain);
     }
 
     @Override
-    public List<TopicResource> findByTopicId(UUID topicId) {
+    public List<TopicResource> findByTopic(UUID topicId) {
         return repositoryJpa.findAllByTopicId(topicId).stream().map(mapper::toDomain).toList();
     }
 
     @Override
-    public List<UUID> findIdsByTopicId(UUID topicId) {
-        return repositoryJpa.findAllByTopicId(topicId).stream().map(TopicResourceEntity::getId).toList();
+    public List<TopicResource> findResourcesOwner(UUID topicId, UUID userId) {
+        return repositoryJpa.findByIdAndTopicCourseUserId(topicId, userId).stream().map(
+                mapper::toDomain
+        ).toList();
     }
 
     @Override
-    public List<UUID> findIdsByCourseId(UUID courseId) {
-        return repositoryJpa.findAllByTopicCourseId(courseId).stream().map(TopicResourceEntity::getId).toList();
+    public UUID findCourseByResourceId(UUID resourceId) {
+        return repositoryJpa.findCourseByTopicResourceId(resourceId);
+    }
+
+    @Override
+    public boolean existsByOwnerId(UUID id, UUID userId) {
+        return repositoryJpa.existsByIdAndTopicCourseUserId(id, userId);
     }
 
     @Override

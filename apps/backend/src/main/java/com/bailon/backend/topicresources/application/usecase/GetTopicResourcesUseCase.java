@@ -8,6 +8,4 @@ import java.util.UUID;
 
 public interface GetTopicResourcesUseCase {
     List<TopicResource> list(UUID topicId, UUID userId, UserRole role);
-
-    TopicResource one(UUID topicId, UUID resourceId, UUID userId, UserRole role);
 }

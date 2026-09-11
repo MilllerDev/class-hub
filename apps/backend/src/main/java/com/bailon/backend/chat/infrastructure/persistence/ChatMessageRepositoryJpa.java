@@ -8,7 +8,5 @@ import java.util.UUID;
 public interface ChatMessageRepositoryJpa extends JpaRepository<ChatMessageEntity, UUID> {
     List<ChatMessageEntity> findByTopicIdAndUserIdOrderByCreatedAtAsc(UUID topicId, UUID userId);
 
-    boolean existsByIdAndUserId(UUID id, UUID userId);
-
     boolean existsByIdAndTopicIdAndUserId(UUID id, UUID topicId, UUID userId);
 }

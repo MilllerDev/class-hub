@@ -9,15 +9,17 @@ import java.util.UUID;
 public interface TopicResourceRepository {
     TopicResource save(TopicResource resource);
 
-    Optional<TopicResource> findById(UUID id);
+    boolean existsById(UUID id);
 
-    Optional<TopicResource> findByIdAndTopicId(UUID id, UUID topicId);
+    Optional<TopicResource> findByIdAndOwner(UUID id, UUID userId);
 
-    List<TopicResource> findByTopicId(UUID topicId);
+    List<TopicResource> findByTopic(UUID topicId);
 
-    List<UUID> findIdsByTopicId(UUID topicId);
+    List<TopicResource> findResourcesOwner(UUID topicId, UUID userId);
 
-    List<UUID> findIdsByCourseId(UUID courseId);
+    UUID findCourseByResourceId(UUID resourceId);
+
+    boolean existsByOwnerId(UUID id, UUID userId);
 
     void delete(UUID id);
 }

@@ -17,24 +17,23 @@ public class TopicResource {
     private String fileName;
     private String fileUrl;
     private ResourceType fileType;
-    private ProcessingStatus processingStatus;
+    private ResourceStatus status;
     private UUID topicId;
     private LocalDateTime createdAt;
 
-    public void makeSaving(UUID topicId) {
-        this.topicId = topicId;
-        this.processingStatus = ProcessingStatus.PENDING;
+    public void markSaving() {
+        this.status = ResourceStatus.PENDING;
     }
 
     public void markProcessing() {
-        this.processingStatus = ProcessingStatus.PROCESSING;
+        this.status = ResourceStatus.PROCESSING;
     }
 
     public void markCompleted() {
-        this.processingStatus = ProcessingStatus.COMPLETED;
+        this.status = ResourceStatus.COMPLETED;
     }
 
     public void markFailed() {
-        this.processingStatus = ProcessingStatus.FAILED;
+        this.status = ResourceStatus.FAILED;
     }
 }
