@@ -1,5 +1,10 @@
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
+import {
+  LastChatsList,
+  LastChatsListSkeleton,
+} from "@/features/dashboard/components/last-chats-list";
 
 export default function StudentPage() {
   return (
@@ -21,6 +26,15 @@ export default function StudentPage() {
           <BookOpen className="size-4" />
           Ver todos mis cursos
         </Link>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold text-foreground">
+          Últimos chats
+        </h2>
+        <Suspense fallback={<LastChatsListSkeleton />}>
+          <LastChatsList />
+        </Suspense>
       </section>
     </div>
   );
