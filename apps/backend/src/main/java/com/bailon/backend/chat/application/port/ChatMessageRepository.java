@@ -12,5 +12,7 @@ public interface ChatMessageRepository {
 
     List<ChatMessage> findChatOwnedUser(UUID topicId, UUID userId);
 
+    List<ChatMessage> lastMessages(UUID userId);
+
     void deleteById(UUID id);
 }

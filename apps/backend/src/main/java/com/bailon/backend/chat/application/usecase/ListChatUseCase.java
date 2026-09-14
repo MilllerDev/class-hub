@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface ListChatUseCase {
     List<ChatMessage> list(UUID userId, UUID topicId);
+
+    List<ChatMessage> last(UUID userId);
 }

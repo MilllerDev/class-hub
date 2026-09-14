@@ -37,6 +37,11 @@ public class ChatMessageRepositoryAdapter implements ChatMessageRepository {
     }
 
     @Override
+    public List<ChatMessage> lastMessages(UUID userId) {
+        return repositoryJpa.lastChats(userId).stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
     public void deleteById(UUID id) {
         repositoryJpa.deleteById(id);
     }

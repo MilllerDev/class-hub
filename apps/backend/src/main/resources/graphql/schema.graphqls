@@ -32,7 +32,17 @@ type Dashboard {
     latestCourses: [Course!]!
 }
 
+type ChatMessage {
+    id: ID!
+    userId: ID!
+    topicId: ID!
+    question: String
+    answer: String
+    createdAt: String
+}
+
 type Query {
+    lastChats: [ChatMessage!]!
     courses: [Course!]!
     dashboard: Dashboard!
 }
