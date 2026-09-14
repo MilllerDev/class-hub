@@ -20,4 +20,9 @@ public class GetTopicService implements ListChatUseCase {
     public List<ChatMessage> list(UUID userId, UUID topicId) {
         return repository.findChatOwnedUser(topicId, userId);
     }
+
+    @Override
+    public List<ChatMessage> last(UUID userId) {
+        return repository.lastMessages(userId);
+    }
 }
