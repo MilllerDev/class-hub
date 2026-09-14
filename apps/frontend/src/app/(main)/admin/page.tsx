@@ -1,32 +1,5 @@
 import { getDashboard } from "@/features/dashboard/action";
 import { RoleBadge } from "@/shared/components/ui/role-badge";
-import {
-  BookOpen,
-  ClipboardCheck,
-  GraduationCap,
-  UserPlus,
-  Users,
-} from "lucide-react";
-
-function StatCard({
-  label,
-  value,
-  icon: Icon,
-}: {
-  label: string;
-  value: string | number;
-  icon: React.ComponentType<{ className?: string }>;
-}) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{label}</p>
-        <Icon className="size-4 text-muted-foreground" />
-      </div>
-      <p className="mt-2 text-2xl font-bold text-card-foreground">{value}</p>
-    </div>
-  );
-}
 
 function StatusBadge({ status }: { status: boolean }) {
   const color = status
@@ -55,15 +28,7 @@ function formatDate(value: string) {
 }
 
 export default async function AdminDashboard() {
-  const { courseCount, latestCourses, latestProfiles } = await getDashboard();
-
-  const stats = [
-    { label: "Total estudiantes", value: 342, icon: GraduationCap },
-    { label: "Total docentes", value: 28, icon: Users },
-    { label: "Cursos activos", value: courseCount, icon: BookOpen },
-    { label: "Usuarios nuevos (mes)", value: 23, icon: UserPlus },
-    { label: "Tareas por revisar", value: 67, icon: ClipboardCheck },
-  ];
+  const { latestCourses, latestProfiles } = await getDashboard();
 
   return (
     <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8 lg:px-6">
@@ -74,12 +39,6 @@ export default async function AdminDashboard() {
         <p className="text-sm text-muted-foreground">
           Resumen general de la plataforma.
         </p>
-      </section>
-
-      <section className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
-        {stats.map((stat) => (
-          <StatCard key={stat.label} {...stat} />
-        ))}
       </section>
 
       <div className="grid items-start gap-6 xl:grid-cols-2">
