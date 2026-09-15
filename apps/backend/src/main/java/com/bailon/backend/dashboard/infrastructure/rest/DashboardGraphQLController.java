@@ -2,6 +2,8 @@ package com.bailon.backend.dashboard.infrastructure.rest;
 
 import com.bailon.backend.chat.application.usecase.ListChatUseCase;
 import com.bailon.backend.chat.domain.model.ChatMessage;
+import com.bailon.backend.courses.application.usecase.GetAllCoursesUseCase;
+import com.bailon.backend.courses.domain.model.Course;
 import com.bailon.backend.dashboard.application.usecase.DashboardUseCase;
 import com.bailon.backend.dashboard.domain.model.Dashboard;
 import com.bailon.backend.users.infrastructure.security.AppUserPrincipal;
@@ -15,10 +17,12 @@ import java.util.List;
 @Controller
 public class DashboardGraphQLController {
     private final DashboardUseCase dashboardUseCase;
+    private final GetAllCoursesUseCase getCourses;
     private final ListChatUseCase getMessages;
 
-    public DashboardGraphQLController(DashboardUseCase dashboardUseCase, ListChatUseCase getMessages) {
+    public DashboardGraphQLController(DashboardUseCase dashboardUseCase, GetAllCoursesUseCase getCourses, ListChatUseCase getMessages) {
         this.dashboardUseCase = dashboardUseCase;
+        this.getCourses = getCourses;
         this.getMessages = getMessages;
     }
 
@@ -26,6 +30,11 @@ public class DashboardGraphQLController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public Dashboard dashboard() {
         return dashboardUseCase.execute();
+    }
+
+    @QueryMapping
+    public List<Course> lastCourses(@AuthenticationPrincipal AppUserPrincipal auth) {
+        return getCourses.execute(auth.user().getRole(), auth.user().getId());
     }
 
     @QueryMapping

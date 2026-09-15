@@ -43,6 +43,7 @@ type ChatMessage {
 
 type Query {
     lastChats: [ChatMessage!]!
+    lastCourses:[Course!]!
     courses: [Course!]!
     dashboard: Dashboard!
 }
