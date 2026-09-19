@@ -1,6 +1,6 @@
 export const lastChats = `query {
   lastChats{
-    userId,
+    id
     topicId,
     question,
     answer,
