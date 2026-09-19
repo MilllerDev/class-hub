@@ -1,5 +1,4 @@
 import { getCoursesForTeacher } from "@/features/courses/action";
-import { getProfile } from "@/features/profiles/action";
 import { BookOpen, ClipboardCheck, Users } from "lucide-react";
 import Link from "next/link";
 
@@ -24,10 +23,7 @@ function StatCard({
 }
 
 export default async function TeacherDashboard() {
-  const [{ data: profile }, { courses }] = await Promise.all([
-    getProfile(),
-    getCoursesForTeacher(),
-  ]);
+  const { courses } = await getCoursesForTeacher();
 
   const stats = [
     { label: "Cursos a cargo", value: courses.length, icon: BookOpen },
@@ -39,7 +35,7 @@ export default async function TeacherDashboard() {
     <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8">
       <section>
         <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Hola, {profile.name} {profile.lastName}
+          Bienvenido de nuevo
         </h1>
         <p className="text-sm text-muted-foreground">
           Bienvenido de vuelta. Este es el resumen de tus cursos.
